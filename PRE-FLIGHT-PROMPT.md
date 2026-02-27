@@ -290,10 +290,12 @@ If truly impossible to define, omit `(scope)` and use:
 - Describe what changed, not feelings
 
 ✅ Good:
+
 - fix(db): corrigir violação de constraint de email duplicado
 - feat(scheduling): permitir cancelamento dentro da janela configurada
 
 ❌ Bad:
+
 - Corrigido bug
 - Atualizando coisas.
 - Adicionada nova funcionalidade
