@@ -442,5 +442,3 @@ Now:
 1. Perform the full diagnosis.
 2. Show the plan.
 3. Await approval to implement (or implement directly if explicitly requested with “execute without awaiting”).
-
-If you want, I can next convert this content into a one-page ultra-short version and an enterprise version (with organizational governance).
