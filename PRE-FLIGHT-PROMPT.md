@@ -84,6 +84,12 @@ Create/update an instruction architecture that is:
    - This requirement must be explicitly added to `PRE-FLIGHT.md`, `AGENTS.md`, and `GEMINI.md`.
    - Commit message output must follow Conventional Commits and Brazilian Portuguese rules exactly.
 
+9. **Mandatory tasks bootstrap and usage**
+   - If `tasks/` is missing, create `tasks/todo.md` and `tasks/lessons.md` with clear usage instructions.
+   - If `tasks/` exists, read both files fully before technical work.
+   - Always apply existing lessons from `tasks/lessons.md`.
+   - Continuously update `tasks/lessons.md` whenever new lessons are learned.
+
 ---
 
 ## Support research and validation (required)
@@ -132,6 +138,7 @@ Create/update (as applicable to the project):
 - `AGENTS.md`
 - `GEMINI.md`
 - `opencode.json` (minimal)
+- `tasks/todo.md` and `tasks/lessons.md` (create if missing with usage guidance)
 
 #### B) Copilot layer
 
@@ -153,6 +160,13 @@ Create/update (as applicable to the project):
 - Add optional but recommended enforcement:
   - `.github/pull_request_template.md` including a **Preflight Evidence** section
   - `.github/workflows/preflight-enforcement.yml` validating presence of `Preflight OK: ...` in the PR body
+
+#### F) Tasks governance (mandatory)
+
+- Ensure root instructions explicitly state:
+  - read `tasks/todo.md` and `tasks/lessons.md` before technical tasks (when `tasks/` exists)
+  - create both files if missing with usage instructions
+  - continuously update `tasks/lessons.md` during execution
 
 #### E) Commit-message enforcement (mandatory)
 
@@ -198,6 +212,7 @@ Consider the work complete only if:
 5. The configuration works for an existing project and also for bootstrapping a new project.
 6. Minimal validation is provided (recommended commands and checks).
 7. Commit-message rules are enforced in OpenCode and Antigravity by explicit mandatory references.
+8. Tasks governance is enforced: `tasks/` exists (or is created), files are read, and `lessons.md` is continuously updated.
 
 ---
 
