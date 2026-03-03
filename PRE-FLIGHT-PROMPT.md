@@ -56,10 +56,10 @@ Create/update an instruction architecture that is:
      Preflight OK: <file1>, <file2>, ...
      ```
 
-   - If the checklist is incomplete:
+    - If the checklist is incomplete:
 
      ```text
-     BLOCKED: preflight incomplete
+      BLOCKED: preflight incompleto
      ```
 
      plus a single, objective action to unblock.
@@ -89,6 +89,30 @@ Create/update an instruction architecture that is:
    - If `tasks/` exists, read both files fully before technical work.
    - Always apply existing lessons from `tasks/lessons.md`.
    - Continuously update `tasks/lessons.md` whenever new lessons are learned.
+
+10. **Mandatory Context7 consultation and modernization criteria**
+    - Before implementation/refactor/review, always consult Context7 MCP for the technologies involved.
+    - Retrieve the latest documentation/examples and apply guidance to current decisions.
+    - Prefer modern and suitable features when compatible with project/runtime constraints.
+    - Make scenario-based decisions (e.g., Java `record` vs DTO class, Virtual Threads for I/O-bound workloads when compatible).
+
+11. **Integral instruction-read policy (mandatory)**
+    - Every mandatory instruction file must be read fully before any technical answer.
+    - If the runtime returns partial windows, continue sequential reads until EOF.
+    - Partial reads never satisfy preflight.
+
+12. **Dirty workspace and Git hygiene (mandatory)**
+    - Never revert or overwrite unrelated user changes.
+    - In a dirty worktree, touch only files required for the task.
+    - Never use destructive Git commands (`reset --hard`, forced checkout, force push) unless explicitly requested.
+
+13. **Java runtime determinism (when applicable)**
+    - For Java projects with multiple JDK requirements, enforce deterministic JDK selection before build/test commands.
+    - Prefer wrapper scripts (for example `jdk-env` + `gradlew-jdk`/`mvn-jdk`) and validate with `java -version` before execution.
+
+14. **Evidence-based completion gate**
+    - Never mark tasks complete without objective evidence (tests, build, logs, or behavior diff).
+    - If verification cannot run, report exactly what is pending and why.
 
 ---
 
@@ -146,6 +170,7 @@ Create/update (as applicable to the project):
 - `.github/copilot-instructions.md` (critical rules at the top)
 - `.github/copilot-commit-message-instructions.md` (mandatory for commit tasks)
 - `.github/instructions/preflight.instructions.md` with `applyTo: "**"`
+- `.github/instructions/context7.instructions.md` with `applyTo: "**"`
 - path-specific instruction files by domain (e.g., backend/frontend/data/devops/docs), used sparingly
 
 #### C) Skills / rules layer
@@ -167,6 +192,12 @@ Create/update (as applicable to the project):
   - read `tasks/todo.md` and `tasks/lessons.md` before technical tasks (when `tasks/` exists)
   - create both files if missing with usage instructions
   - continuously update `tasks/lessons.md` during execution
+
+#### G) Context7 governance (mandatory)
+
+- Ensure root instructions explicitly state mandatory Context7 MCP consultation before implementation/refactor/review.
+- Ensure context instruction file exists (`.github/instructions/context7.instructions.md`) and is covered by preflight.
+- Ensure modernization decisions are compatibility-aware (adopt current features only when appropriate).
 
 #### E) Commit-message enforcement (mandatory)
 
@@ -213,6 +244,7 @@ Consider the work complete only if:
 6. Minimal validation is provided (recommended commands and checks).
 7. Commit-message rules are enforced in OpenCode and Antigravity by explicit mandatory references.
 8. Tasks governance is enforced: `tasks/` exists (or is created), files are read, and `lessons.md` is continuously updated.
+9. Context7 governance is enforced: latest docs are consulted and modernization decisions are compatibility-aware.
 
 ---
 
@@ -457,3 +489,25 @@ Now:
 1. Perform the full diagnosis.
 2. Show the plan.
 3. Await approval to implement (or implement directly if explicitly requested with “execute without awaiting”).
+
+## Mandatory final code review and factual integrity
+
+- At the end of every implementation/refactor/fix, perform a final code review before marking the task complete.
+- Review must verify correctness, security, performance, readability, test impact, and compatibility with existing architecture/contracts.
+- It is allowed (and encouraged) to use internet sources and up-to-date documentation (including Context7 and official docs) to close knowledge gaps.
+- Never invent facts, APIs, versions, behaviors, or references; if uncertain, verify first or explicitly state uncertainty.
+
+## MCP credential discovery and connection consent (mandatory)
+
+- When a task requests a specific MCP server, or when policy requires one (for example Context7), automatically attempt credential discovery before connecting.
+- Search credential/config locations in this order:
+  1. Workspace/project files: `mcp.json`, `.mcp.json`, `mcp_servers.json`, `.vscode/mcp.json`, `opencode.json`.
+  2. OpenCode config: path from `OPENCODE_CONFIG` (if set), then user/global OpenCode config directories for this OS (for example `~/.config/opencode/opencode.json`, `~/.config/opencode/mcp/*.json`).
+  3. VS Code user/profile MCP config for this OS: `%APPDATA%/Code/User/mcp.json` (Windows), `~/Library/Application Support/Code/User/mcp.json` (macOS), `~/.config/Code/User/mcp.json` (Linux).
+  4. Antigravity/Gemini local config only when files exist and are documented for the active environment/project (for example `~/.gemini/settings.json`).
+  5. Environment variables referenced by MCP configuration (`env`, `${VAR}`, `$VAR`, `%VAR%`).
+- If credentials are not found, report exactly: `credentials not found for requested MCP`.
+- Before connecting to any MCP server, request user confirmation and list the credential source(s) to be used (redacted; never print secret values).
+- Do not establish the MCP connection before explicit user consent; discovery and validation can run first, connection cannot.
+- Never invent credential locations, tokens, API keys, or authentication results.
+
