@@ -114,6 +114,32 @@ Create/update an instruction architecture that is:
     - Never mark tasks complete without objective evidence (tests, build, logs, or behavior diff).
     - If verification cannot run, report exactly what is pending and why.
 
+15. **Skill discoverability contract (mandatory)**
+    - Every `SKILL.md` created/updated must include valid YAML frontmatter at the top with at least:
+      - `name: <skill-id>`
+      - `description: <clear-purpose>`
+    - Skill IDs must be stable and match folder intent (for example `orchestrate-multi-agents`).
+    - Do not ship skill files without frontmatter; discovery can fail silently in some tools.
+
+16. **Instruction reference integrity (mandatory)**
+    - Validate every file path referenced from workspace/IDE settings and instruction arrays.
+    - Remove stale/nonexistent references and avoid adding broken paths.
+    - Treat broken references as a preflight quality defect.
+
+17. **Hard Java wrapper enforcement (mandatory when applicable)**
+    - Do not allow direct Java build/test execution (`mvn`, `gradle`, `./gradlew`) in instruction examples when wrapper scripts exist.
+    - Prefer deterministic wrappers (`scripts/jdk-env.ps1` + `scripts/gradlew-jdk.ps1` or `scripts/mvn-jdk.ps1`) and explicitly state: never run direct tool first.
+    - Keep runtime proof mandatory (`java -version`) before build/test.
+
+18. **Settings-scope precedence and de-dup policy**
+    - For VS Code/Copilot settings, treat workspace `.code-workspace` / `.vscode/settings.json` as higher precedence than user settings.
+    - Avoid duplicating long critical instruction arrays across user and workspace scopes unless a fallback strategy is explicit.
+    - Document chosen precedence to prevent ambiguous behavior.
+
+19. **Non-Java workspace guard**
+    - If a workspace/project is non-Java, explicitly block Java/Maven/Gradle execution in core instructions.
+    - Do not propagate Java runtime rules into non-Java subprojects.
+
 ---
 
 ## Support research and validation (required)
@@ -177,11 +203,13 @@ Create/update (as applicable to the project):
 
 - `.agent/skills/development-standards/SKILL.md`
 - `.agent/skills/code-review/SKILL.md` (if review/PR processes make sense)
+- `.agent/skills/orchestrate-multi-agents/SKILL.md` (mandatory for non-trivial orchestration)
 - `.agent/rules/development-standards.md`
 
 #### D) IDE & operations
 
 - Configure IDE workspace instruction settings when applicable (e.g., VS Code `copilot.custom.instructions`).
+- For keys like `github.copilot.chat.*.instructions`, define clear scope ownership (user vs workspace) and remove accidental duplication.
 - Add optional but recommended enforcement:
   - `.github/pull_request_template.md` including a **Preflight Evidence** section
   - `.github/workflows/preflight-enforcement.yml` validating presence of `Preflight OK: ...` in the PR body
@@ -245,6 +273,9 @@ Consider the work complete only if:
 7. Commit-message rules are enforced in OpenCode and Antigravity by explicit mandatory references.
 8. Tasks governance is enforced: `tasks/` exists (or is created), files are read, and `lessons.md` is continuously updated.
 9. Context7 governance is enforced: latest docs are consulted and modernization decisions are compatibility-aware.
+10. Skill discoverability is enforced: all `SKILL.md` files include valid `name` + `description` YAML frontmatter.
+11. Instruction references are valid: no missing file paths in settings/instruction arrays.
+12. Java execution guidance is deterministic: wrappers mandated and direct `mvn`/`./gradlew` discouraged when wrapper exists.
 
 ---
 
@@ -480,6 +511,7 @@ Respond with:
 - Do not run destructive commands without explicit request.
 - Do not modify secrets/credentials.
 - Do not commit/push without request.
+- When repositories contain mixed changes, and the request is instruction-only, stage and commit only instruction/governance files.
 - In case of critical ambiguity, ask one objective question with a recommended default.
 
 ## Start of task
