@@ -511,3 +511,10 @@ Now:
 - Do not establish the MCP connection before explicit user consent; discovery and validation can run first, connection cannot.
 - Never invent credential locations, tokens, API keys, or authentication results.
 
+
+## Mandatory multi-agent orchestration skill
+
+- For non-trivial tasks (multi-discipline scope, parallelizable work, broad refactor/migration, high inconsistency risk, or audit-heavy requirements), always activate `orchestrate-multi-agents` before implementation.
+- Require: Execution Plan, explicit handoffs, dependency-aware parallelism, DoD quality gates, and final consolidation with Decision Log.
+- Require per-agent evidence (what changed, why, and validation proof).
+- If a task is trivial/single-step, explicitly justify not using multi-agent orchestration.
