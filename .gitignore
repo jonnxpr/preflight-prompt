@@ -18,3 +18,6 @@
 !scripts/jdk-env.ps1
 !scripts/gradlew-jdk.ps1
 !scripts/mvn-jdk.ps1
+
+# Generated security scan artifacts (keep local, do not version)
+*.sarif

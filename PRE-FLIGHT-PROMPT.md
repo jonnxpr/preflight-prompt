@@ -140,6 +140,26 @@ Create/update an instruction architecture that is:
     - If a workspace/project is non-Java, explicitly block Java/Maven/Gradle execution in core instructions.
     - Do not propagate Java runtime rules into non-Java subprojects.
 
+20. **Generated SARIF artifacts must not be versioned**
+    - Security scan artifacts (`*.sarif`) are runtime evidence and must be ignored by Git.
+    - Ensure `.gitignore` includes `*.sarif` even when `tasks/**` is allowed.
+    - If any `.sarif` is already tracked, remove it from index (`git rm --cached`) without deleting local evidence files.
+
+21. **Secret-scan operational fallback clarity**
+    - If secret scan returns `Secret scan skipped: gitleaks not available in current shell.`, treat it as an environment availability issue, not a clean scan.
+    - Report scanner availability explicitly for PowerShell and bash contexts.
+    - Do not fail governance bootstrap when scanner binary is missing; provide objective remediation steps.
+
+22. **Binary-safe history scanning policy**
+    - For repositories with binary history artifacts (for example PDF blobs), avoid treating parser/diff errors as clean scans.
+    - Prefer dual strategy: PR-time filesystem scan (`--no-git`) plus scheduled history scan with explicit binary/path exclusions.
+    - For real historical blockers, remove problematic blobs from history with approved rewrite procedure and communication.
+
+23. **Global governance execution scope**
+    - Toolkit execution must cover all detected workspaces/projects that contain `tools/governance/audit-compliance.py`.
+    - Do not limit execution to only the currently edited workspace when a global governance request is made.
+    - Final state must be explicitly reported per target with compliance score.
+
 ---
 
 ## Support research and validation (required)
@@ -276,6 +296,8 @@ Consider the work complete only if:
 10. Skill discoverability is enforced: all `SKILL.md` files include valid `name` + `description` YAML frontmatter.
 11. Instruction references are valid: no missing file paths in settings/instruction arrays.
 12. Java execution guidance is deterministic: wrappers mandated and direct `mvn`/`./gradlew` discouraged when wrapper exists.
+13. Generated SARIF artifacts are not versioned and are ignored by Git.
+14. Governance toolkit global execution covers all detected targets, each with explicit score evidence.
 
 ---
 
