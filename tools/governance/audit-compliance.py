@@ -23,7 +23,10 @@ files = sorted(
     set(
         f
         for f in files
-        if '/.history/' not in f.as_posix().lower() and '/bin/' not in f.as_posix().lower()
+        if '/.history/' not in f.as_posix().lower()
+        and '/bin/' not in f.as_posix().lower()
+        and not f.as_posix().lower().startswith('bin/')
+        and not f.as_posix().lower().startswith('.history/')
     )
 )
 
