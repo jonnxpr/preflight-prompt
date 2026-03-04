@@ -552,3 +552,11 @@ Now:
 - Require: Execution Plan, explicit handoffs, dependency-aware parallelism, DoD quality gates, and final consolidation with Decision Log.
 - Require per-agent evidence (what changed, why, and validation proof).
 - If a task is trivial/single-step, explicitly justify not using multi-agent orchestration.
+- For non-trivial tasks, instantiate the `Template DAG 100% compliance` from `orchestrate-multi-agents`; owners/tasks may be reduced only when not applicable, but mandatory gates cannot be removed.
+
+## Governance automation (mandatory)
+
+- Secret scan: `./tools/governance/scan-secrets.ps1`
+- Instruction sync (idempotent): `python ./tools/governance/sync-instructions.py`
+- Compliance score/report: `python ./tools/governance/audit-compliance.py`
+- Precedence matrix: `./tools/governance/precedence-matrix.md`
