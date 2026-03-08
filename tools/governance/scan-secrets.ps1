@@ -1,4 +1,7 @@
-param([switch]$UpdateBaseline)
+param(
+  [switch]$UpdateBaseline,
+  [switch]$FailOnLeaks
+)
 $ErrorActionPreference = "Stop"
 if (-not (Test-Path "tasks")) { New-Item -ItemType Directory -Path "tasks" | Out-Null }
 $govDir = ".governance"
@@ -7,6 +10,17 @@ $report = "tasks/secret-scan.sarif"
 $baseline = ".governance/gitleaks-baseline.json"
 $gitleaks = Get-Command gitleaks -ErrorAction SilentlyContinue
 $useBashFallback = $false
+$isGitRepo = $false
+
+try {
+  & git rev-parse --is-inside-work-tree *> $null
+  if ($LASTEXITCODE -eq 0) {
+    $isGitRepo = $true
+  }
+} catch {
+  $isGitRepo = $false
+}
+
 if (-not $gitleaks) {
   $bash = Get-Command bash -ErrorAction SilentlyContinue
   if ($bash) {
@@ -19,26 +33,45 @@ if (-not $gitleaks) {
 
 if (-not $gitleaks -and -not $useBashFallback) {
   Write-Warning "gitleaks not found in PowerShell or bash PATH. Secret scan skipped."
-  if (-not (Test-Path "tasks")) { New-Item -ItemType Directory -Path "tasks" | Out-Null }
   "Secret scan skipped: gitleaks not available in current shell." | Out-File -FilePath "tasks/secret-scan.sarif" -Encoding utf8
   exit 0
 }
 
-function Invoke-Gitleaks([string]$argsLine) {
+function Get-BashQuotedArg([string]$arg) {
+  if ($null -eq $arg) { return '""' }
+  return '"' + ($arg -replace '"', '\\"') + '"'
+}
+
+function Invoke-Gitleaks([string[]]$argsList) {
   if ($useBashFallback) {
-    & bash -lc "gitleaks $argsLine"
+    $quoted = ($argsList | ForEach-Object { Get-BashQuotedArg $_ }) -join ' '
+    & bash -lc "gitleaks $quoted"
   } else {
-    & gitleaks $argsLine.Split(' ')
+    & gitleaks @argsList
   }
 }
+
+$scanModeArgs = @('detect', '--source', '.', '--redact', '--report-format', 'sarif', '--report-path', $report)
+$baselineModeArgs = @('detect', '--source', '.', '--redact', '--report-format', 'json', '--report-path', $baseline, '--exit-code', '0')
+
+if (-not $isGitRepo) {
+  $scanModeArgs += '--no-git'
+  $baselineModeArgs += '--no-git'
+}
+
+if (-not $FailOnLeaks) {
+  $scanModeArgs += @('--exit-code', '0')
+}
+
 if ($UpdateBaseline) {
-  Invoke-Gitleaks "detect --source . --redact --report-format json --report-path $baseline --exit-code 0"
+  Invoke-Gitleaks $baselineModeArgs
   Write-Host "Updated baseline: $baseline"
   exit 0
 }
 if (Test-Path $baseline) {
-  Invoke-Gitleaks "detect --source . --redact --report-format sarif --report-path $report --baseline-path $baseline"
+  $scanModeArgs += @('--baseline-path', $baseline)
+  Invoke-Gitleaks $scanModeArgs
 } else {
-  Invoke-Gitleaks "detect --source . --redact --report-format sarif --report-path $report"
+  Invoke-Gitleaks $scanModeArgs
 }
 Write-Host "Report: $report"
