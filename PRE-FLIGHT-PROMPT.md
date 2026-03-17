@@ -556,12 +556,12 @@ Now:
 ## MCP credential discovery and connection consent (mandatory)
 
 - When a task requests a specific MCP server, or when policy requires one (for example Context7), automatically attempt credential discovery before connecting.
-- Search credential/config locations in this order:
-  1. Workspace/project files: `mcp.json`, `.mcp.json`, `mcp_servers.json`, `.vscode/mcp.json`, `opencode.json`.
-  2. OpenCode config: path from `OPENCODE_CONFIG` (if set), then user/global OpenCode config directories for this OS (for example `~/.config/opencode/opencode.json`, `~/.config/opencode/mcp/*.json`).
-  3. VS Code user/profile MCP config for this OS: `%APPDATA%/Code/User/mcp.json` (Windows), `~/Library/Application Support/Code/User/mcp.json` (macOS), `~/.config/Code/User/mcp.json` (Linux).
-  4. Antigravity/Gemini local config only when files exist and are documented for the active environment/project (for example `~/.gemini/settings.json`).
-  5. Environment variables referenced by MCP configuration (`env`, `${VAR}`, `$VAR`, `%VAR%`).
+    - Search credential/config locations in this order:
+      1. Workspace/project files: `mcp.json`, `.mcp.json`, `mcp_servers.json`, `.vscode/mcp.json`, `opencode.json`, `.copilot/mcp-config.json`.
+      2. OpenCode config: path from `OPENCODE_CONFIG` (if set), then user/global OpenCode config directories for this OS (for example `~/.config/opencode/opencode.json`, `~/.config/opencode/mcp/*.json`).
+      3. VS Code user/profile MCP config for this OS: `%APPDATA%/Code/User/mcp.json` and `%APPDATA%/Code/User/profiles/*/mcp.json` (Windows), `~/Library/Application Support/Code/User/mcp.json` and `~/Library/Application Support/Code/User/profiles/*/mcp.json` (macOS), `~/.config/Code/User/mcp.json` and `~/.config/Code/User/profiles/*/mcp.json` (Linux).
+      4. Antigravity/Gemini local config only when files exist and are documented for the active environment/project (for example `~/.gemini/settings.json`, `~/.gemini/antigravity/mcp_config.json`).
+      5. Environment variables referenced by MCP configuration (`env`, `${VAR}`, `$VAR`, `%VAR%`).
 - If credentials are not found, report exactly: `credentials not found for requested MCP`.
 - Before connecting to any MCP server, request user confirmation and list the credential source(s) to be used (redacted; never print secret values).
 - Do not establish the MCP connection before explicit user consent; discovery and validation can run first, connection cannot.
@@ -582,3 +582,79 @@ Now:
 - Instruction sync (idempotent): `python ./tools/governance/sync-instructions.py`
 - Compliance score/report: `python ./tools/governance/audit-compliance.py`
 - Precedence matrix: `./tools/governance/precedence-matrix.md`
+
+---
+
+## MCP Credential Standardization (mandatory)
+
+All MCP credentials must use environment variables instead of hardcoded values. This ensures consistency across all tools and avoids credential exposure.
+
+### Required Environment Variables
+
+Define these user-level environment variables for MCP credentials:
+
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `CONTEXT7_API_KEY` | Context7 API access | `ctx7sk-...` |
+
+### Cross-Tool Consistency
+
+Ensure all tools have equivalent MCP configurations:
+
+| Tool | Config Location | Key | Notes |
+|------|---------------|-----|-------|
+| OpenCode | `~/.config/opencode/opencode.json` | `mcp` | Use `{env:VAR_NAME}` in `environment` field |
+| GitHub Copilot | `~/.copilot/mcp-config.json` | `mcpServers` | Hardcoded values |
+| Antigravity | `~/.gemini/antigravity/mcp_config.json` | `mcpServers` | Hardcoded values |
+| VS Code | `%APPDATA%/Code/User/mcp.json` | `servers` | Hardcoded values |
+| VS Code Profile | `%APPDATA%/Code/User/profiles/{id}/mcp.json` | `servers` | Hardcoded values |
+
+### Windows-Specific Requirements
+
+On native Windows (not WSL), local MCP servers that use `.bat` wrapper files require `cmd /c`:
+
+```json
+{
+  "command": ["cmd", "/c", "C:/Users/.../wrappers/script.bat"],
+  "environment": {
+    "MCP_VAR": "{env:MCP_VAR}"
+  }
+}
+```
+
+OpenCode does NOT pass environment variables to subprocesses automatically. You MUST use the `environment` field explicitly.
+
+### UTF-8 Encoding Without BOM
+
+All MCP configuration files must be saved as UTF-8 without BOM. PowerShell example:
+
+```powershell
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllText($filePath, $content, $utf8NoBom)
+```
+
+Never use `Set-Content -Encoding UTF8` as it adds BOM.
+
+### Post-Sync Action
+
+After updating MCP configurations, restart all tools to apply new settings.
+
+### MCP Sync Script
+
+Create a sync script (`~/.config/mcp/sync-mcp-configs.ps1`) that:
+
+1. Reads environment variables from User-level: `[Environment]::GetEnvironmentVariable('VAR', 'User')`
+2. Generates all tool configs with hardcoded values from env vars
+3. Saves files as UTF-8 without BOM using: `[System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding $false))`
+4. Updates wrapper scripts for tools that require them
+
+### MCP Package Version Management
+
+Check for updated versions regularly:
+
+```bash
+npm view @upstash/context7-mcp version
+npm view @playwright/mcp version
+```
+
+Update all configs when versions change.

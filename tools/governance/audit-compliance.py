@@ -1,5 +1,6 @@
 from pathlib import Path
 import argparse
+import os
 import json
 import re
 import sys
@@ -16,10 +17,17 @@ PREFLIGHT_OK = 'Preflight OK:'
 PREFLIGHT_BLOCK = 'BLOCKED: preflight incompleto'
 CONTEXT7 = 'Context7'
 MCP_CONSENT = 'Before connecting to any MCP server, request user confirmation'
+MCP_COPILOT_CONFIG = '.copilot/mcp-config.json'
+MCP_GEMINI_CONFIG = '.gemini/antigravity/mcp_config.json'
+MCP_PROFILE_CONFIG = 'profiles/*/mcp.json'
 TASKS_READ_1 = 'tasks/todo.md'
 TASKS_READ_2 = 'tasks/lessons.md'
 TASKS_CREATE_HINT = 'If `tasks/` is missing, create `tasks/todo.md` and `tasks/lessons.md`'
 COMMIT_POLICY = '.github/copilot-commit-message-instructions.md'
+JDK_ENV = 'jdk-env.ps1'
+JAVA_VERSION = 'java -version'
+GRADLE_WRAPPER = 'gradlew-jdk.ps1'
+MAVEN_WRAPPER = 'mvn-jdk.ps1'
 
 MANDATORY_PATTERNS = [
     '**/PRE-FLIGHT.md',
@@ -250,6 +258,15 @@ def check_core_contracts(files, findings):
                     'Add explicit consent requirement before MCP connection.',
                 )
 
+            if MCP_COPILOT_CONFIG not in text or MCP_GEMINI_CONFIG not in text or MCP_PROFILE_CONFIG not in text:
+                add_finding(
+                    findings,
+                    'incomplete_mcp_search',
+                    file_path,
+                    'MCP credential discovery order does not cover Copilot config, Antigravity MCP config, and VS Code profile MCP files.',
+                    'Add .copilot/mcp-config.json, ~/.gemini/antigravity/mcp_config.json, and profiles/*/mcp.json to the discovery instructions.',
+                )
+
         if is_root_core and name in {'pre-flight.md', 'claude.md'}:
             has_read = TASKS_READ_1 in text and TASKS_READ_2 in text
             has_create = ('tasks/' in text and 'missing' in text.lower() and 'create' in text.lower())
@@ -288,6 +305,80 @@ def check_skill_routing(findings):
         )
 
 
+def check_java_multi_agent_contract(findings):
+    has_java_wrapper = (ROOT / 'scripts' / GRADLE_WRAPPER).exists() or (ROOT / 'scripts' / MAVEN_WRAPPER).exists()
+    if not has_java_wrapper:
+        return
+
+    required_files = [
+        ROOT / 'PRE-FLIGHT.md',
+        ROOT / 'AGENTS.md',
+        ROOT / 'GEMINI.md',
+        ROOT / '.github' / 'copilot-instructions.md',
+        ROOT / '.agent' / 'skills' / 'orchestrate-multi-agents' / 'SKILL.md',
+        ROOT / '.opencode' / 'skills' / 'orchestrate-multi-agents' / 'SKILL.md',
+        ROOT / '.github' / 'skills' / 'orchestrate-multi-agents' / 'SKILL.md',
+    ]
+
+    expected_wrapper = GRADLE_WRAPPER if (ROOT / 'scripts' / GRADLE_WRAPPER).exists() else MAVEN_WRAPPER
+    for path in required_files:
+        if not path.exists():
+            continue
+        text = read_text(path)
+        if JDK_ENV not in text or JAVA_VERSION not in text or expected_wrapper not in text:
+            add_finding(
+                findings,
+                'missing_java_multi_agent_runtime',
+                path,
+                'Java multi-agent runtime contract is incomplete.',
+                f'Add explicit same-shell JDK selection with `{JDK_ENV}`, `{JAVA_VERSION}`, and `{expected_wrapper}`.',
+            )
+
+
+def check_user_mcp_runtime(findings):
+    home = Path.home()
+    appdata = Path(os.environ.get('APPDATA', '')) if os.environ.get('APPDATA') else None
+
+    runtime_targets = [
+        home / '.config' / 'opencode' / 'opencode.json',
+        home / '.copilot' / 'mcp-config.json',
+        home / '.gemini' / 'antigravity' / 'mcp_config.json',
+    ]
+    if appdata:
+        runtime_targets.extend([
+            appdata / 'Code' / 'User' / 'mcp.json',
+            appdata / 'Code' / 'User' / 'profiles' / '149c18e5' / 'mcp.json',
+            appdata / 'Antigravity' / 'User' / 'mcp.json',
+        ])
+
+    found_context7 = False
+    for path in runtime_targets:
+        if not path.exists():
+            continue
+        text = read_text(path)
+        if 'context7' in text and 'CONTEXT7_API_KEY' in text:
+            found_context7 = True
+            break
+
+    if not found_context7:
+        add_finding(
+            findings,
+            'missing_context7_runtime_config',
+            ROOT / 'tools' / 'governance' / 'audit-compliance.py',
+            'Context7 runtime configuration was not found in user/global MCP configs.',
+            'Configure context7 in OpenCode, Copilot, and Antigravity MCP config files.',
+        )
+
+    if not os.environ.get('CONTEXT7_API_KEY'):
+        add_finding(
+            findings,
+            'missing_context7_env',
+            ROOT / 'tools' / 'governance' / 'audit-compliance.py',
+            'CONTEXT7_API_KEY user environment variable is not available in the current process.',
+            'Set CONTEXT7_API_KEY at user level and restart tool sessions.',
+        )
+
+
 def count_findings(findings, keys):
     return sum(len(findings.get(k, [])) for k in keys)
 
@@ -307,6 +398,10 @@ def score_from_findings(findings):
         'missing_tasks_governance',
         'missing_mcp_consent',
         'missing_skill_routing',
+        'incomplete_mcp_search',
+        'missing_java_multi_agent_runtime',
+        'missing_context7_runtime_config',
+        'missing_context7_env',
     }
 
     critical = count_findings(findings, critical_keys)
@@ -363,6 +458,10 @@ def emit_report(files_checked, findings, score_tuple):
             'missing_context7_policy',
             'missing_tasks_governance',
             'missing_mcp_consent',
+            'incomplete_mcp_search',
+            'missing_java_multi_agent_runtime',
+            'missing_context7_runtime_config',
+            'missing_context7_env',
             'missing_skill_routing',
         ]
         for category in ordered:
@@ -390,6 +489,8 @@ def main():
     check_core_contracts(files, findings)
     check_reference_integrity(references, findings)
     check_skill_routing(findings)
+    check_java_multi_agent_contract(findings)
+    check_user_mcp_runtime(findings)
 
     score_tuple = score_from_findings(findings)
     score = emit_report(len(files), findings, score_tuple)
