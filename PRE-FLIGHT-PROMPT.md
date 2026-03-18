@@ -160,6 +160,21 @@ Create/update an instruction architecture that is:
     - Do not limit execution to only the currently edited workspace when a global governance request is made.
     - Final state must be explicitly reported per target with compliance score.
 
+24. **Mandatory Git Repository Discovery**
+    - When the workspace root is NOT a git repository (no .git in current path)
+    - IMMEDIATELY scan parent directories for subfolders containing .git
+    - Identify the correct subproject/repository based on file paths
+    - Use the discovered git repo context for all git operations
+    - NEVER assume workspace root is the git repository
+    - Create helper scripts (e.g., `scripts/discover-git-repo.ps1`) to automate detection
+
+25. **OpenCode Skills Path Convention (MANDATORY)**
+    - OpenCode auto-discovers skills from `.opencode/skills/<name>/SKILL.md`
+    - Do NOT use `skills/` (with 's') - this is a known bug in some OpenCode versions
+    - Do NOT use `skill/` without the `.opencode/` prefix
+    - Correct: `.opencode/skills/code-review/SKILL.md`
+    - Skills are auto-discovered; no need to configure in opencode.json
+
 ---
 
 ## Support research and validation (required)
