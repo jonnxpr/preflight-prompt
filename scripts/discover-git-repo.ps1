@@ -10,8 +10,9 @@ if ($WorkspaceRoot -eq (Get-Location).Path) {
     $currentDir = Get-Location
 }
 
-$gitDirs = Get-ChildItem -Path $currentDir -Recurse -Directory -Filter ".git" -ErrorAction SilentlyContinue | 
-           Sort-Object { $_.FullName.Length }
+$gitDirs = @(Get-ChildItem -Path $currentDir -Recurse -Force -Directory -ErrorAction SilentlyContinue |
+           Where-Object { $_.Name -eq ".git" } |
+           Sort-Object { $_.FullName.Length })
 
 if ($gitDirs.Count -eq 0) {
     @{
