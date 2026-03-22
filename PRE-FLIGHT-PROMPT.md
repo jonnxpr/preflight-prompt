@@ -21,7 +21,8 @@ You are an **AI Instruction Architecture Engineer** specialized in configuring p
 Configure (or harmonize) this repository for consistent use across:
 
 - OpenCode
-- GitHub Copilot (Chat, Coding Agent, Code Review)
+- GitHub Copilot for VS Code (Chat, Coding Agent, Code Review)
+- GitHub Copilot CLI
 - Antigravity / Gemini
 - Other IDEs/assistants applicable in the detected context
 
@@ -200,11 +201,12 @@ Before implementing:
    - stack, build/test/lint scripts, CI/CD, monorepo/subprojects, directory layout.
 
 2. Inventory existing instruction artifacts:
-   - `.github/copilot-instructions.md`
-   - `.github/instructions/**/*.instructions.md`
-   - `.copilot/**`
-   - `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
-   - `opencode.json`
+    - `.github/copilot-instructions.md`
+    - `.github/instructions/**/*.instructions.md`
+    - `.github/skills/**`
+    - `.copilot/**`
+    - `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
+    - `opencode.json`
    - `.agent/skills/**`, `.agent/rules/**`
    - IDE configs (`.vscode/settings.json`, etc.)
 
@@ -236,10 +238,21 @@ Create/update (as applicable to the project):
 
 #### C) Skills / rules layer
 
+- `.github/skills/development-standards/SKILL.md` (Copilot CLI local skill mirror when applicable)
+- `.github/skills/code-review/SKILL.md` (Copilot CLI local review mirror when applicable)
+- `.github/skills/orchestrate-multi-agents/SKILL.md` (Copilot CLI local orchestration mirror when applicable)
+- `.github/skills/frontend-design/SKILL.md` (Copilot CLI local frontend-design mirror when applicable)
 - `.agent/skills/development-standards/SKILL.md`
 - `.agent/skills/code-review/SKILL.md` (if review/PR processes make sense)
 - `.agent/skills/orchestrate-multi-agents/SKILL.md` (mandatory for non-trivial orchestration)
 - `.agent/rules/development-standards.md`
+
+#### C.1) Personal/global Copilot CLI skill layer
+
+- `~/.copilot/skills/development-standards/SKILL.md`
+- `~/.copilot/skills/code-review/SKILL.md`
+- `~/.copilot/skills/orchestrate-multi-agents/SKILL.md`
+- `~/.copilot/skills/frontend-design/SKILL.md` (when the workspace has frontend-design guidance)
 
 #### D) IDE & operations
 
@@ -276,10 +289,12 @@ Create/update (as applicable to the project):
 2. `CLAUDE.md`
 3. `.github/copilot-instructions.md`
 4. `.github/instructions/*.instructions.md` (path-specific)
-5. `.agent/skills/development-standards/SKILL.md`
-6. `.agent/rules/development-standards.md`
-7. `.agent/skills/code-review/SKILL.md` (review/PR)
-8. `.github/copilot-commit-message-instructions.md` (commit creation/message tasks)
+5. `.github/skills/development-standards/SKILL.md` (Copilot CLI local skills)
+6. `.opencode/skills/development-standards/SKILL.md` (OpenCode local skills)
+7. `.agent/skills/development-standards/SKILL.md`
+8. `.agent/rules/development-standards.md`
+9. `.github/skills/code-review/SKILL.md` / `.agent/skills/code-review/SKILL.md` (review/PR)
+10. `.github/copilot-commit-message-instructions.md` (commit creation/message tasks)
 
 If conflicts arise, apply the more specific level while preserving global contracts.
 
@@ -313,6 +328,7 @@ Consider the work complete only if:
 12. Java execution guidance is deterministic: wrappers mandated and direct `mvn`/`./gradlew` discouraged when wrapper exists.
 13. Generated SARIF artifacts are not versioned and are ignored by Git.
 14. Governance toolkit global execution covers all detected targets, each with explicit score evidence.
+15. The architecture explicitly supports OpenCode, GitHub Copilot VS Code, GitHub Copilot CLI, and Antigravity/Gemini.
 
 ---
 
@@ -619,7 +635,7 @@ Ensure all tools have equivalent MCP configurations:
 | Tool | Config Location | Key | Notes |
 |------|---------------|-----|-------|
 | OpenCode | `~/.config/opencode/opencode.json` | `mcp` | Use `{env:VAR_NAME}` in `environment` field |
-| GitHub Copilot | `~/.copilot/mcp-config.json` | `mcpServers` | Hardcoded values |
+| GitHub Copilot CLI / VS Code | `~/.copilot/mcp-config.json` | `mcpServers` | Shared runtime config; keep aligned with `~/.copilot/skills/*/SKILL.md` |
 | Antigravity | `~/.gemini/antigravity/mcp_config.json` | `mcpServers` | Hardcoded values |
 | VS Code | `%APPDATA%/Code/User/mcp.json` | `servers` | Hardcoded values |
 | VS Code Profile | `%APPDATA%/Code/User/profiles/{id}/mcp.json` | `servers` | Hardcoded values |

@@ -2,7 +2,7 @@ from pathlib import Path
 import argparse
 import sys
 
-ROOT = Path('.')
+ROOT = Path(__file__).resolve().parents[2]
 TASKS = ROOT / 'tasks'
 TASKS.mkdir(exist_ok=True)
 OUT = TASKS / 'precedence-report.md'
@@ -21,19 +21,21 @@ CORE_FILES = [
     ROOT / '.github' / 'copilot-instructions.md',
 ]
 
+MATRIX_TITLE = '# Precedence Matrix (OpenCode, Copilot VS Code, Copilot CLI, Antigravity)'
+
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding='utf-8', errors='ignore')
 
 
-def check_token_order(text: str):
-    indexes = []
+def check_token_order(text: str) -> bool:
+    positions = []
     for token in ORDER_TOKENS:
-        idx = text.find(token)
-        if idx == -1:
+        index = text.find(token)
+        if index == -1:
             return False
-        indexes.append(idx)
-    return indexes == sorted(indexes)
+        positions.append(index)
+    return positions == sorted(positions)
 
 
 def main():
@@ -42,15 +44,14 @@ def main():
     args = parser.parse_args()
 
     findings = []
-
     matrix = ROOT / 'tools' / 'governance' / 'precedence-matrix.md'
     if not matrix.exists():
         findings.append((str(matrix), 'Missing precedence matrix file'))
     else:
         text = read_text(matrix)
-        for marker in ['## Cases', '## Procedure']:
+        for marker in [MATRIX_TITLE, '## Cases', '## Procedure', 'Copilot CLI']:
             if marker not in text:
-                findings.append((str(matrix), f'Missing section: {marker}'))
+                findings.append((str(matrix), f'Missing section or marker: {marker}'))
 
     for path in CORE_FILES:
         if not path.exists():
@@ -65,7 +66,6 @@ def main():
         f'- Findings: **{len(findings)}**',
         '',
     ]
-
     if findings:
         lines.append('## Findings')
         for path, reason in findings:

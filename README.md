@@ -1,6 +1,6 @@
 # Preflight Prompt
 
-Template profissional para inicializar ou harmonizar instruções de IA em repositórios novos e existentes, com foco em consistência, auditabilidade e compatibilidade entre múltiplos agentes/IDEs.
+Template profissional para inicializar ou harmonizar instruções de IA em repositórios novos e existentes, com foco em consistência, auditabilidade e compatibilidade entre OpenCode, GitHub Copilot VS Code, GitHub Copilot CLI e Antigravity/Gemini.
 
 ## Objetivo
 
@@ -8,6 +8,7 @@ Este projeto fornece um prompt base para orientar uma IA a:
 
 - diagnosticar a estrutura real do repositório;
 - organizar instruções por camadas (globais e específicas);
+- configurar skills locais e globais para GitHub Copilot CLI sem quebrar os demais agentes;
 - aplicar um gate de preflight obrigatório;
 - preservar conteúdo existente com merge inteligente;
 - padronizar governança de tarefas e mensagens de commit.
@@ -37,6 +38,7 @@ Este projeto fornece um prompt base para orientar uma IA a:
 
 - Gate de preflight explícito para bloquear execuções incompletas;
 - Compatibilidade por capacidade (com fallback por ambiente);
+- Arquitetura de 4 ferramentas com espelhamento de skills locais (`.github/skills`) e globais (`~/.copilot/skills`) para Copilot CLI;
 - Preservação de conteúdo útil sem sobrescrita cega;
 - Idempotência (execuções repetidas sem degradação);
 - Auditoria por lista de arquivos criados/modificados e justificativas;
