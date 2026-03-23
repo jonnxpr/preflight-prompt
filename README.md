@@ -8,10 +8,12 @@ Este projeto fornece um prompt base para orientar uma IA a:
 
 - diagnosticar a estrutura real do repositório;
 - organizar instruções por camadas (globais e específicas);
-- configurar skills locais e globais para GitHub Copilot CLI sem quebrar os demais agentes;
+- configurar skills locais e globais para GitHub Copilot CLI e OpenCode sem quebrar os demais agentes;
 - aplicar um gate de preflight obrigatório;
 - preservar conteúdo existente com merge inteligente;
-- padronizar governança de tarefas e mensagens de commit.
+- padronizar governança de tarefas e mensagens de commit;
+- resolver corretamente o repositório Git dono de cada caminho, inclusive em workspaces com nested repos;
+- fortalecer governança MCP e validação de precedência com evidência auditável.
 
 ## Público-alvo
 
@@ -38,7 +40,12 @@ Este projeto fornece um prompt base para orientar uma IA a:
 
 - Gate de preflight explícito para bloquear execuções incompletas;
 - Compatibilidade por capacidade (com fallback por ambiente);
-- Arquitetura de 4 ferramentas com espelhamento de skills locais (`.github/skills`) e globais (`~/.copilot/skills`) para Copilot CLI;
+- Arquitetura de 4 ferramentas com camadas locais e globais para OpenCode (`.opencode/skills`), Copilot CLI (`.github/skills`, `~/.copilot/skills`) e demais agentes;
+- Descoberta correta de contexto Git tanto para raiz sem repositório quanto para raiz com repositório + sub-repositórios aninhados;
+- Verificação de precedência semântica, evitando falsos positivos por menções incidentais em títulos ou texto solto;
+- Governança MCP com uso de variáveis de ambiente, perfis VS Code dinâmicos e DSN como fonte de verdade quando aplicável;
+- Segurança operacional para não tentar commitar/pushar arquivos fora de qualquer repositório Git;
+- Execução de toolkit de governança com evidência por alvo, incluindo compliance e precedence;
 - Preservação de conteúdo útil sem sobrescrita cega;
 - Idempotência (execuções repetidas sem degradação);
 - Auditoria por lista de arquivos criados/modificados e justificativas;
@@ -49,7 +56,17 @@ Este projeto fornece um prompt base para orientar uma IA a:
 - Execute primeiro em modo diagnóstico para validar impacto;
 - Ajuste apenas o necessário para o stack detectado;
 - Revise conflitos entre instruções globais e específicas por caminho;
-- Mantenha regras críticas no topo dos arquivos principais de instrução.
+- Mantenha regras críticas no topo dos arquivos principais de instrução;
+- Faça a validação final com `audit-compliance.py` e `verify-precedence.py` quando o projeto possuir toolkit de governança;
+- Em workspaces com vários repositórios, confirme sempre o repo dono do caminho antes de qualquer operação Git.
+
+## Aprendizados consolidados nesta versão
+
+- A raiz do workspace pode ser um repositório válido e ainda conter nested repos; o prompt agora cobre os dois casos explicitamente.
+- A linha de precedência canônica deve aparecer nos arquivos raiz para facilitar auditoria automatizada sem heurísticas frágeis.
+- A camada `.opencode/skills/*` precisa ser tratada como primeira classe, e não apenas como espelho implícito de outras ferramentas.
+- Perfis VS Code para MCP devem ser descobertos dinamicamente; não se deve assumir um identificador fixo de profile.
+- Em cenários com arquivos fora de repositório, o fluxo correto é reportar como mudança local ou gerar patch, nunca forçar commit/push.
 
 ## Limites e escopo
 

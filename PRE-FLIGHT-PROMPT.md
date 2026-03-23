@@ -157,19 +157,30 @@ Create/update an instruction architecture that is:
     - For real historical blockers, remove problematic blobs from history with approved rewrite procedure and communication.
 
 23. **Global governance execution scope**
-    - Toolkit execution must cover all detected workspaces/projects that contain `tools/governance/audit-compliance.py`.
+    - Toolkit execution must cover all detected workspaces/projects that contain `tools/governance/audit-compliance.py` or `tools/governance/verify-precedence.py`.
     - Do not limit execution to only the currently edited workspace when a global governance request is made.
-    - Final state must be explicitly reported per target with compliance score.
+    - Final state must be explicitly reported per target with compliance and precedence evidence.
 
 24. **Mandatory Git Repository Discovery**
-    - When the workspace root is NOT a git repository (no .git in current path)
-    - IMMEDIATELY scan parent directories for subfolders containing .git
-    - Identify the correct subproject/repository based on file paths
-    - Use the discovered git repo context for all git operations
-    - NEVER assume workspace root is the git repository
-    - Create helper scripts (e.g., `scripts/discover-git-repo.ps1`) to automate detection
+    - Before any git operation, resolve which repository owns the target path.
+    - If the current path is not a git repository, use a helper such as `scripts/discover-git-repo.ps1` to auto-detect the active repository.
+    - If the workspace root is a git repository but contains nested repositories, do not assume the root repo owns every path; resolve ownership from the target area.
+    - Use the correct repo context for status, diff, branch, commit, log, and push operations.
+    - Never assume a single repo context applies to the whole workspace when nested repositories exist.
 
-25. **OpenCode Skills Path Convention (MANDATORY)**
+25. **Precedence evidence must be semantic, not brittle**
+    - Root workflow files should explicitly state the canonical precedence:
+      `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github/copilot-instructions.md`
+    - If automation verifies precedence, it must validate ordered evidence sequentially and avoid false positives caused by titles or unrelated mentions.
+    - `tools/governance/precedence-matrix.md` should include at least `# Precedence Matrix...`, `## Cases`, `## Procedure`, and `## Automated verification`, and mention Copilot CLI explicitly.
+    - `tools/governance/verify-precedence.py` should inspect at least `PRE-FLIGHT.md`, `AGENTS.md`, `GEMINI.md`, `CLAUDE.md`, `.copilot/base-instructions.md`, and `.github/copilot-instructions.md`.
+
+26. **Non-repo commit/push safety**
+    - If some changed instruction/governance files are outside any git repository, do not try to commit or push them.
+    - Commit/push only files owned by a real repository.
+    - Report non-repo changes as local-only or provide an exportable patch.
+
+27. **OpenCode Skills Path Convention (MANDATORY)**
     - OpenCode auto-discovers skills from `.opencode/skills/<name>/SKILL.md`
     - Do NOT use `skills/` (with 's') - this is a known bug in some OpenCode versions
     - Do NOT use `skill/` without the `.opencode/` prefix
@@ -207,8 +218,9 @@ Before implementing:
     - `.copilot/**`
     - `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
     - `opencode.json`
-   - `.agent/skills/**`, `.agent/rules/**`
-   - IDE configs (`.vscode/settings.json`, etc.)
+    - `.opencode/skills/**`
+    - `.agent/skills/**`, `.agent/rules/**`
+    - IDE configs (`.vscode/settings.json`, etc.)
 
 3. Identify conflicts, gaps, and duplications.
 
@@ -242,6 +254,10 @@ Create/update (as applicable to the project):
 - `.github/skills/code-review/SKILL.md` (Copilot CLI local review mirror when applicable)
 - `.github/skills/orchestrate-multi-agents/SKILL.md` (Copilot CLI local orchestration mirror when applicable)
 - `.github/skills/frontend-design/SKILL.md` (Copilot CLI local frontend-design mirror when applicable)
+- `.opencode/skills/development-standards/SKILL.md` (OpenCode local skill)
+- `.opencode/skills/code-review/SKILL.md` (OpenCode local review skill when applicable)
+- `.opencode/skills/orchestrate-multi-agents/SKILL.md` (OpenCode local orchestration skill when applicable)
+- `.opencode/skills/frontend-design/SKILL.md` (OpenCode local frontend-design skill when applicable)
 - `.agent/skills/development-standards/SKILL.md`
 - `.agent/skills/code-review/SKILL.md` (if review/PR processes make sense)
 - `.agent/skills/orchestrate-multi-agents/SKILL.md` (mandatory for non-trivial orchestration)
@@ -296,6 +312,8 @@ Create/update (as applicable to the project):
 9. `.github/skills/code-review/SKILL.md` / `.agent/skills/code-review/SKILL.md` (review/PR)
 10. `.github/copilot-commit-message-instructions.md` (commit creation/message tasks)
 
+Root workflow files should also carry the canonical precedence line explicitly so automation can validate it without ambiguity.
+
 If conflicts arise, apply the more specific level while preserving global contracts.
 
 ---
@@ -329,6 +347,10 @@ Consider the work complete only if:
 13. Generated SARIF artifacts are not versioned and are ignored by Git.
 14. Governance toolkit global execution covers all detected targets, each with explicit score evidence.
 15. The architecture explicitly supports OpenCode, GitHub Copilot VS Code, GitHub Copilot CLI, and Antigravity/Gemini.
+16. Git repository discovery handles both non-repo roots and repo roots with nested repositories.
+17. Precedence verification is semantic, includes `CLAUDE.md`, and avoids brittle first-occurrence matching.
+18. MCP discovery/runtime scan covers `.copilot/mcp-config.json`, `~/.gemini/antigravity/mcp_config.json`, and all VS Code profiles dynamically (no fixed profile id assumptions).
+19. Files outside any git repository are not mistakenly committed or pushed.
 
 ---
 
@@ -612,21 +634,31 @@ Now:
 - Secret scan: `./tools/governance/scan-secrets.ps1`
 - Instruction sync (idempotent): `python ./tools/governance/sync-instructions.py`
 - Compliance score/report: `python ./tools/governance/audit-compliance.py`
+- Precedence report: `python ./tools/governance/verify-precedence.py`
 - Precedence matrix: `./tools/governance/precedence-matrix.md`
 
 ---
 
 ## MCP Credential Standardization (mandatory)
 
-All MCP credentials must use environment variables instead of hardcoded values. This ensures consistency across all tools and avoids credential exposure.
+All MCP credentials must use environment variables instead of hardcoded values. This ensures consistency across OpenCode, GitHub Copilot CLI / VS Code, Antigravity, and other supported tools while avoiding credential exposure.
 
 ### Required Environment Variables
 
-Define these user-level environment variables for MCP credentials:
+Define user-level environment variables for MCP credentials. At minimum:
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
 | `CONTEXT7_API_KEY` | Context7 API access | `ctx7sk-...` |
+
+When database MCP servers are used, keep DSNs as the source of truth. Common patterns:
+
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `MCP_MYSQL_HOMOL_DSN` | MySQL homologation DSN | `mysql://user:pass@host/db` |
+| `MCP_MYSQL_HOMOL_LOCAL_DSN` | MySQL homologation local DSN | `mysql://root:pass@127.0.0.1:3307/db` |
+| `MCP_MYSQL_PRD_DSN` | MySQL production DSN | `mysql://user:pass@host/db` |
+| `MCP_POSTGRES_LOCAL_DSN` | PostgreSQL local DSN | `postgresql://user:pass@host/db` |
 
 ### Cross-Tool Consistency
 
@@ -634,11 +666,18 @@ Ensure all tools have equivalent MCP configurations:
 
 | Tool | Config Location | Key | Notes |
 |------|---------------|-----|-------|
-| OpenCode | `~/.config/opencode/opencode.json` | `mcp` | Use `{env:VAR_NAME}` in `environment` field |
-| GitHub Copilot CLI / VS Code | `~/.copilot/mcp-config.json` | `mcpServers` | Shared runtime config; keep aligned with `~/.copilot/skills/*/SKILL.md` |
-| Antigravity | `~/.gemini/antigravity/mcp_config.json` | `mcpServers` | Hardcoded values |
-| VS Code | `%APPDATA%/Code/User/mcp.json` | `servers` | Hardcoded values |
-| VS Code Profile | `%APPDATA%/Code/User/profiles/{id}/mcp.json` | `servers` | Hardcoded values |
+| OpenCode | `~/.config/opencode/opencode.json` | `mcp` | Use wrapper scripts plus `{env:VAR_NAME}` in `environment` when needed |
+| GitHub Copilot CLI / VS Code | `~/.copilot/mcp-config.json` | `mcpServers` | Keep aligned with `~/.copilot/skills/*/SKILL.md`; do not hardcode secrets |
+| Antigravity | `~/.gemini/antigravity/mcp_config.json` | `mcpServers` | Follow the same env-var policy; do not hardcode secrets |
+| VS Code | `%APPDATA%/Code/User/mcp.json` | `servers` | Keep synchronized without hardcoded secrets |
+| VS Code Profile | `%APPDATA%/Code/User/profiles/*/mcp.json` | `servers` | Update all detected profiles dynamically; never pin a single profile id |
+
+### DSN Source-of-Truth Rule
+
+- For DSN-based MCP validation or manual `connect_db` checks, always parse the DSN first.
+- Extract and use the exact `host`, `port`, `database`, and `user` from the DSN itself.
+- Never infer or substitute connection hosts manually.
+- Before reporting connection problems, verify that the tested host exactly matches the host in the relevant DSN environment variable.
 
 ### Windows-Specific Requirements
 
@@ -653,7 +692,14 @@ On native Windows (not WSL), local MCP servers that use `.bat` wrapper files req
 }
 ```
 
-OpenCode does NOT pass environment variables to subprocesses automatically. You MUST use the `environment` field explicitly.
+OpenCode does NOT expand environment variables in command arrays automatically. Use wrapper scripts and the `environment` field explicitly when required.
+
+### Security Rules
+
+- Never hardcode credentials in MCP config files.
+- Never commit credentials to version control.
+- Always synchronize generated configs and wrappers from environment variables.
+- Restart tools after synchronization.
 
 ### UTF-8 Encoding Without BOM
 
@@ -666,18 +712,15 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
 Never use `Set-Content -Encoding UTF8` as it adds BOM.
 
-### Post-Sync Action
-
-After updating MCP configurations, restart all tools to apply new settings.
-
 ### MCP Sync Script
 
 Create a sync script (`~/.config/mcp/sync-mcp-configs.ps1`) that:
 
-1. Reads environment variables from User-level: `[Environment]::GetEnvironmentVariable('VAR', 'User')`
-2. Generates all tool configs with hardcoded values from env vars
-3. Saves files as UTF-8 without BOM using: `[System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding $false))`
-4. Updates wrapper scripts for tools that require them
+1. Reads environment variables from user-level scope: `[Environment]::GetEnvironmentVariable('VAR', 'User')`
+2. Updates OpenCode, Copilot, Antigravity, VS Code User, and all detected VS Code profile configs
+3. Uses wrappers when a tool cannot expand environment variables directly
+4. Saves files as UTF-8 without BOM using: `[System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding $false))`
+5. Updates wrapper scripts for tools that require them
 
 ### MCP Package Version Management
 
