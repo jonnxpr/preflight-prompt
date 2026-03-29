@@ -63,3 +63,9 @@
 - Contexto: no workspace Partner, o hub operacional `projetos/` nao e git, mas sua superficie de governanca precisa historico auditavel.
 - Correcao recebida: versionar essa superficie dentro do repositorio irmao de governanca em um caminho de espelho claro, como `mirrors/projetos-hub/`.
 - Regra preventiva: quando um hub operacional nao-git receber mudancas em docs/instrucoes/skills/comandos/ferramentas de governanca, sincronizar o espelho versionado no repositorio irmao na mesma rodada.
+
+## 2026-03-29 - Espelho versionado de hub nao-git precisa de script e modo check
+
+- Contexto: sem automacao, o espelho versionado pode ficar desatualizado mesmo com a arquitetura correta.
+- Correcao recebida: criar script dedicado de sincronizacao com modo de verificacao (`--check` ou equivalente) para detectar drift sem modificar arquivos.
+- Regra preventiva: toda estrategia de espelho versionado para hub nao-git deve nascer com comando de sync e comando de check documentados.

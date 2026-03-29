@@ -236,6 +236,7 @@ Create/update an instruction architecture that is:
     - If the operational workspace root is intentionally not a git repository, but its governance surface still needs history, version that surface inside the sibling governance repo under a clear mirror path such as `mirrors/<workspace-hub>/`.
     - Mirror only source-of-truth governance assets there (for example root docs, instructions, skills, commands, and governance tooling), not generated reports or product code.
     - Keep the mirror synchronized whenever the local non-git hub governance surface changes.
+    - Prefer an explicit sync script plus a `--check` mode so the mirror can be updated and validated repeatably.
 
 ---
 
