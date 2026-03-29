@@ -57,3 +57,9 @@
 - Contexto: criar apenas o repositorio irmao nao fecha a arquitetura se o workspace principal continuar sem referencia clara ao novo ownership.
 - Correcao recebida: apos criar o repositorio irmao, atualizar `README.md`, `PRE-FLIGHT.md`, `CLAUDE.md`, `AGENTS.md` e `.github/copilot-instructions.md` do workspace principal para apontar para ele.
 - Regra preventiva: tratar a referencia ao repositorio irmao como parte obrigatoria do rollout, nao como documentacao opcional de pos-migracao.
+
+## 2026-03-29 - Hub operacional nao-git precisa de espelho versionado no repositorio irmao
+
+- Contexto: no workspace Partner, o hub operacional `projetos/` nao e git, mas sua superficie de governanca precisa historico auditavel.
+- Correcao recebida: versionar essa superficie dentro do repositorio irmao de governanca em um caminho de espelho claro, como `mirrors/projetos-hub/`.
+- Regra preventiva: quando um hub operacional nao-git receber mudancas em docs/instrucoes/skills/comandos/ferramentas de governanca, sincronizar o espelho versionado no repositorio irmao na mesma rodada.
