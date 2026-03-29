@@ -237,6 +237,7 @@ Create/update an instruction architecture that is:
     - Mirror only source-of-truth governance assets there (for example root docs, instructions, skills, commands, and governance tooling), not generated reports or product code.
     - Keep the mirror synchronized whenever the local non-git hub governance surface changes.
     - Prefer an explicit sync script plus a `--check` mode so the mirror can be updated and validated repeatably.
+    - In Windows-first workspaces, also provide a small `.ps1` wrapper with actions like `sync` and `check` for team-friendly execution.
 
 ---
 

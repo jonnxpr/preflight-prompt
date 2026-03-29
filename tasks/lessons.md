@@ -69,3 +69,9 @@
 - Contexto: sem automacao, o espelho versionado pode ficar desatualizado mesmo com a arquitetura correta.
 - Correcao recebida: criar script dedicado de sincronizacao com modo de verificacao (`--check` ou equivalente) para detectar drift sem modificar arquivos.
 - Regra preventiva: toda estrategia de espelho versionado para hub nao-git deve nascer com comando de sync e comando de check documentados.
+
+## 2026-03-29 - Wrapper PowerShell ajuda em workspaces Windows-first
+
+- Contexto: mesmo com script principal em Python, a execucao do dia a dia pode ficar melhor com comando nativo do ambiente.
+- Correcao recebida: expor um `.ps1` enxuto com acoes `sync` e `check` para o espelho versionado do hub nao-git.
+- Regra preventiva: quando o workspace for claramente Windows-first, complementar o script principal com wrapper PowerShell simples e documentado.

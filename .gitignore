@@ -1,4 +1,6 @@
 .history/*
+__pycache__/
+*.pyc
 
 # AI instruction and governance files (must be versioned)
 !.copilot/
@@ -21,3 +23,8 @@
 
 # Generated security scan artifacts (keep local, do not version)
 *.sarif
+tasks/compliance-report.md
+tasks/precedence-report.md
+tasks/workspace-baseline-report.md
+tasks/secret-scan.sarif
+tasks/secret-triage-report.md
