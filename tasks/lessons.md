@@ -51,3 +51,9 @@
 - Contexto: workspaces com varios repos ou hubs neutros precisam versionar memoria de governanca sem transformar a raiz operacional em repo de governanca.
 - Correcao recebida: preferir um repositorio irmao dedicado (por exemplo `partner-governance/`, `meuagendamento-governance/`) em vez de converter a raiz operacional.
 - Regra preventiva: manter ownership explicito - o repo irmao guarda prompts, templates, notas de rollout e memoria de governanca; codigo de produto, assets repo-locais e Speckit repo-local continuam no repo principal ou nos nested repos.
+
+## 2026-03-29 - Repositorio principal precisa apontar para o repositorio irmao de governanca
+
+- Contexto: criar apenas o repositorio irmao nao fecha a arquitetura se o workspace principal continuar sem referencia clara ao novo ownership.
+- Correcao recebida: apos criar o repositorio irmao, atualizar `README.md`, `PRE-FLIGHT.md`, `CLAUDE.md`, `AGENTS.md` e `.github/copilot-instructions.md` do workspace principal para apontar para ele.
+- Regra preventiva: tratar a referencia ao repositorio irmao como parte obrigatoria do rollout, nao como documentacao opcional de pos-migracao.

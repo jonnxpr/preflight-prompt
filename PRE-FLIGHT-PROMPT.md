@@ -230,6 +230,7 @@ Create/update an instruction architecture that is:
     - It must not become the owner of child-repo branches, releases, CI, repo-local `.specify/`, repo-local `specs/`, or repo-local instruction files unless a migration explicitly moves that ownership.
     - Bootstrap every governance sibling with at least `README.md`, `tasks/todo.md`, `tasks/lessons.md`, and a `.gitignore` that ignores generated governance evidence by default.
     - Document workspace targets and non-ownership boundaries in the governance sibling `README.md`.
+    - After creating the governance sibling, update the primary workspace `README.md` and root instruction files (`PRE-FLIGHT.md`, `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`) so they point to the sibling repo as the canonical home for long-lived shared governance memory.
 
 ---
 

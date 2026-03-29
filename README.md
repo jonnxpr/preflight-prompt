@@ -75,6 +75,7 @@ Este projeto fornece um prompt base para orientar uma IA a:
 - Quando o toolkit fornecer auditoria de baseline de workspace, ela deve ser executada junto com compliance e precedence para fechar o diagnóstico global com evidência completa.
 - A arquitetura mais limpa para governança compartilhada é usar um repositório irmão dedicado, em vez de transformar a raiz operacional do workspace em repositório de governança.
 - O repositório irmão de governança deve possuir apenas memoria de governança, templates, planos de migracao e documentacao compartilhada; codigo de produto e assets repo-locais continuam no repo principal ou nos nested repos.
+- Depois de criar o repositório irmão, o `README.md` e as instrucoes raiz do workspace principal devem apontar explicitamente para ele como casa canonica da memoria compartilhada de governanca.
 - Em cenários com arquivos fora de repositório, o fluxo correto é reportar como mudança local ou gerar patch, nunca forçar commit/push.
 
 ## Limites e escopo
