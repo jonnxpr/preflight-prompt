@@ -45,3 +45,9 @@
 - Contexto: compliance e precedence nao cobrem sozinhos alguns contratos globais de hubs multi-repo.
 - Correcao recebida: quando existir `audit-workspace-baseline.py` ou equivalente, ele deve rodar junto do toolkit principal e entrar no veredito final.
 - Regra preventiva: em pedidos globais de governanca, consolidar evidencia de compliance, precedence e baseline por alvo.
+
+## 2026-03-29 - Repositorio irmao de governanca e o padrao mais limpo
+
+- Contexto: workspaces com varios repos ou hubs neutros precisam versionar memoria de governanca sem transformar a raiz operacional em repo de governanca.
+- Correcao recebida: preferir um repositorio irmao dedicado (por exemplo `partner-governance/`, `meuagendamento-governance/`) em vez de converter a raiz operacional.
+- Regra preventiva: manter ownership explicito - o repo irmao guarda prompts, templates, notas de rollout e memoria de governanca; codigo de produto, assets repo-locais e Speckit repo-local continuam no repo principal ou nos nested repos.

@@ -216,6 +216,21 @@ Create/update an instruction architecture that is:
     - If the governance toolkit includes `tools/governance/audit-workspace-baseline.py` or equivalent workspace-wide audit, run it alongside compliance and precedence checks.
     - Report required and recommended findings separately when the tool supports that distinction.
 
+33. **Sibling governance repository is the preferred clean architecture**
+    - When a workspace needs shared governance history but the operational root should stay neutral or product-focused, prefer a sibling governance repository instead of converting the workspace root into a governance repo.
+    - Recommended pattern examples:
+      - `workspace/ambiente-partner/projetos/` + `workspace/ambiente-partner/partner-governance/`
+      - `Documents/meuagendamento/` + `Documents/meuagendamento-governance/`
+      - `Documents/Portfolio/` + `Documents/portfolio-governance/`
+    - Use the sibling governance repo for shared prompts, rollout notes, migration plans, templates, and governance memory.
+    - Keep the primary workspace repo authoritative for product code and repo-local AI assets.
+
+34. **Governance sibling ownership boundaries must be explicit**
+    - A sibling governance repo owns shared governance docs and migration memory, not application code.
+    - It must not become the owner of child-repo branches, releases, CI, repo-local `.specify/`, repo-local `specs/`, or repo-local instruction files unless a migration explicitly moves that ownership.
+    - Bootstrap every governance sibling with at least `README.md`, `tasks/todo.md`, `tasks/lessons.md`, and a `.gitignore` that ignores generated governance evidence by default.
+    - Document workspace targets and non-ownership boundaries in the governance sibling `README.md`.
+
 ---
 
 ## Support research and validation (required)

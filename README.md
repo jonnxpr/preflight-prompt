@@ -73,6 +73,8 @@ Este projeto fornece um prompt base para orientar uma IA a:
 - Descoberta automática de child repos precisa diferenciar `.git` diretório de `.git` arquivo de worktree para não aplicar rollout em worktrees paralelos por engano.
 - Antes de commit/push, é obrigatório descobrir a política de branch do repo dono; não se deve assumir `main` quando o fluxo real usa `feature/*`, `homologation` ou outro branch operacional.
 - Quando o toolkit fornecer auditoria de baseline de workspace, ela deve ser executada junto com compliance e precedence para fechar o diagnóstico global com evidência completa.
+- A arquitetura mais limpa para governança compartilhada é usar um repositório irmão dedicado, em vez de transformar a raiz operacional do workspace em repositório de governança.
+- O repositório irmão de governança deve possuir apenas memoria de governança, templates, planos de migracao e documentacao compartilhada; codigo de produto e assets repo-locais continuam no repo principal ou nos nested repos.
 - Em cenários com arquivos fora de repositório, o fluxo correto é reportar como mudança local ou gerar patch, nunca forçar commit/push.
 
 ## Limites e escopo
