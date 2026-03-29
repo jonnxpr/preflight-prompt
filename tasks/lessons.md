@@ -75,3 +75,9 @@
 - Contexto: mesmo com script principal em Python, a execucao do dia a dia pode ficar melhor com comando nativo do ambiente.
 - Correcao recebida: expor um `.ps1` enxuto com acoes `sync` e `check` para o espelho versionado do hub nao-git.
 - Regra preventiva: quando o workspace for claramente Windows-first, complementar o script principal com wrapper PowerShell simples e documentado.
+
+## 2026-03-29 - Hook local fecha a melhor garantia pratica do espelho
+
+- Contexto: mesmo com sync/check manuais, ainda existe risco de commit no repo de governanca com espelho desatualizado.
+- Correcao recebida: instalar hook local de pre-commit no repo irmao de governanca para executar o check do espelho antes de cada commit.
+- Regra preventiva: em estrategia de espelho versionado para hub nao-git, considerar hook local como parte do toolkit padrao quando o objetivo for reduzir drift ao maximo.

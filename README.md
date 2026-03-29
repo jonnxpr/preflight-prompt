@@ -79,6 +79,7 @@ Este projeto fornece um prompt base para orientar uma IA a:
 - Se o hub operacional principal for nao-git, a superficie de governanca desse hub deve ganhar um espelho versionado dentro do repositorio irmao de governanca, em vez de ficar apenas local.
 - Esse espelho deve ter automacao explicita de sincronizacao e um modo de verificacao (`--check` ou equivalente) para evitar drift silencioso.
 - Em workspaces Windows-first, vale expor tambem um wrapper `.ps1` simples com acoes `sync` e `check`.
+- Para a garantia pratica mais forte nesse modelo, o repositorio irmao de governanca deve instalar um hook local de pre-commit que bloqueie commits quando o espelho estiver defasado.
 - Em cenários com arquivos fora de repositório, o fluxo correto é reportar como mudança local ou gerar patch, nunca forçar commit/push.
 
 ## Limites e escopo
