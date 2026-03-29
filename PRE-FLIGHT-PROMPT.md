@@ -239,6 +239,7 @@ Create/update an instruction architecture that is:
     - Prefer an explicit sync script plus a `--check` mode so the mirror can be updated and validated repeatably.
     - In Windows-first workspaces, also provide a small `.ps1` wrapper with actions like `sync` and `check` for team-friendly execution.
     - For the strongest practical guarantee in this model, install a local pre-commit hook in the governance sibling repo so commits are blocked when the mirror is out of sync.
+    - If the workspace has a canonical architecture runbook, root instruction files must explicitly point agents to that runbook for architecture-surface changes.
 
 ---
 
