@@ -168,9 +168,11 @@ Create/update an instruction architecture that is:
     - Use the correct repo context for status, diff, branch, commit, log, and push operations.
     - Never assume a single repo context applies to the whole workspace when nested repositories exist.
 
-25. **Precedence evidence must be semantic, not brittle**
+25. **Precedence evidence must be semantic and explicit in every audited layer**
     - Root workflow files should explicitly state the canonical precedence:
       `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github/copilot-instructions.md`
+    - In nested repositories/subprojects, local `AGENTS.md`, `GEMINI.md`, and `.github/copilot-instructions.md` must also mention those precedence tokens in order, even when they inherit workspace-root instructions.
+    - Generic phrases such as "read the workspace root instruction files first" are not sufficient when precedence automation expects semantic ordered evidence.
     - If automation verifies precedence, it must validate ordered evidence sequentially and avoid false positives caused by titles or unrelated mentions.
     - `tools/governance/precedence-matrix.md` should include at least `# Precedence Matrix...`, `## Cases`, `## Procedure`, and `## Automated verification`, and mention Copilot CLI explicitly.
     - `tools/governance/verify-precedence.py` should inspect at least `PRE-FLIGHT.md`, `AGENTS.md`, `GEMINI.md`, `CLAUDE.md`, `.copilot/base-instructions.md`, and `.github/copilot-instructions.md`.
@@ -180,12 +182,39 @@ Create/update an instruction architecture that is:
     - Commit/push only files owned by a real repository.
     - Report non-repo changes as local-only or provide an exportable patch.
 
-27. **OpenCode Skills Path Convention (MANDATORY)**
-    - OpenCode auto-discovers skills from `.opencode/skills/<name>/SKILL.md`
-    - Do NOT use `skills/` (with 's') - this is a known bug in some OpenCode versions
-    - Do NOT use `skill/` without the `.opencode/` prefix
-    - Correct: `.opencode/skills/code-review/SKILL.md`
-    - Skills are auto-discovered; no need to configure in opencode.json
+27. **OpenCode path conventions (MANDATORY)**
+    - OpenCode auto-discovers skills from `.opencode/skills/<name>/SKILL.md`.
+    - OpenCode command discovery must use `.opencode/commands/` (plural).
+    - Do not use `.opencode/command/` for custom slash-command discovery.
+    - Correct examples:
+      - `.opencode/skills/code-review/SKILL.md`
+      - `.opencode/commands/speckit.plan.md`
+    - Skills are auto-discovered; do not invent alternate directory names for critical discovery surfaces.
+
+28. **Speckit ownership and safe-parity rules**
+    - A non-git governance hub may expose routing-only entrypoints in `.opencode/commands/`, `.github/prompts/`, `.github/agents/`, and `.gemini/commands/`, but must not own `.specify/` or `specs/`.
+    - A workspace root that is itself a git repository may own workspace-level Speckit assets, but nested repositories must keep separate `.specify/` and `specs/` trees.
+    - Never let Speckit automation write outside the owning repo or rewrite home-dir/global governance files.
+    - Prefer `gh` for GitHub issue export; for GitLab-safe repos, do not assume GitHub-only `taskstoissues` surfaces exist.
+
+29. **Generated governance artifacts should be treated as generated evidence by default**
+    - Review whether files such as `tasks/compliance-report.md`, `tasks/precedence-report.md`, `tasks/workspace-baseline-report.md`, and `tasks/secret-scan.sarif` are generated artifacts.
+    - When they are generated runtime evidence rather than canonical source files, add them to `.gitignore` and remove tracked copies from the index without deleting local evidence.
+    - If a workspace root intentionally versions some governance reports, document that exception explicitly instead of letting child repos drift implicitly.
+
+30. **Child-repo discovery must be worktree-safe**
+    - When scanning subdirectories for child repositories, distinguish a normal repository (`.git` directory) from a Git worktree marker (`.git` file).
+    - Do not treat worktrees as ordinary child repos for broad governance rollouts unless explicitly targeted.
+    - Do not let automatic cleanup, ignore-policy changes, or pushes leak into parallel worktrees.
+
+31. **Branch policy must be discovered before commit/push**
+    - Before commit/push, inspect the current branch, its upstream tracking branch, and any repo-specific branch policy.
+    - Do not assume `main` or `master`; follow the owning repo workflow branch (for example `feature/*`, `homologation`, `release/*`).
+    - Keep commits isolated to the repo and branch explicitly intended for the change.
+
+32. **Workspace baseline audits should be used when the toolkit provides them**
+    - If the governance toolkit includes `tools/governance/audit-workspace-baseline.py` or equivalent workspace-wide audit, run it alongside compliance and precedence checks.
+    - Report required and recommended findings separately when the tool supports that distinction.
 
 ---
 
@@ -351,6 +380,12 @@ Consider the work complete only if:
 17. Precedence verification is semantic, includes `CLAUDE.md`, and avoids brittle first-occurrence matching.
 18. MCP discovery/runtime scan covers `.copilot/mcp-config.json`, `~/.gemini/antigravity/mcp_config.json`, and all VS Code profiles dynamically (no fixed profile id assumptions).
 19. Files outside any git repository are not mistakenly committed or pushed.
+20. Nested repo local workflow files carry explicit ordered precedence evidence, not just generic inheritance text.
+21. OpenCode command discovery uses `.opencode/commands/` and Speckit ownership stays in the correct repo scope.
+22. Generated governance artifacts are ignored/untracked where they are evidence outputs rather than source-of-truth files.
+23. Child-repo discovery and rollout logic do not mistake Git worktrees for ordinary child repositories.
+24. Commit/push execution respects the owning repo branch policy instead of assuming `main`.
+25. Workspace baseline audit tools are executed when present and included in the final evidence.
 
 ---
 

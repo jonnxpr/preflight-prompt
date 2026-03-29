@@ -64,8 +64,15 @@ Este projeto fornece um prompt base para orientar uma IA a:
 
 - A raiz do workspace pode ser um repositório válido e ainda conter nested repos; o prompt agora cobre os dois casos explicitamente.
 - A linha de precedência canônica deve aparecer nos arquivos raiz para facilitar auditoria automatizada sem heurísticas frágeis.
+- Em nested repos, `AGENTS.md`, `GEMINI.md` e `.github/copilot-instructions.md` também precisam explicitar os tokens de precedência em ordem; herança genérica não basta para auditoria semântica.
 - A camada `.opencode/skills/*` precisa ser tratada como primeira classe, e não apenas como espelho implícito de outras ferramentas.
+- O OpenCode usa `.opencode/commands/` para discovery de comandos; `.opencode/command/` gera drift e precisa ser evitado.
+- Hubs não-git podem expor apenas comandos roteadores do Speckit, mas não devem possuir `.specify/` ou `specs/`; já roots que são git repos podem ter specs próprios sem contaminar nested repos.
 - Perfis VS Code para MCP devem ser descobertos dinamicamente; não se deve assumir um identificador fixo de profile.
+- Artefatos gerados de governança (por exemplo `tasks/compliance-report.md`, `tasks/precedence-report.md`, `tasks/workspace-baseline-report.md`, `tasks/secret-scan.sarif`) devem ser tratados como evidência gerada e ignorados/destrackeados quando não forem fonte de verdade.
+- Descoberta automática de child repos precisa diferenciar `.git` diretório de `.git` arquivo de worktree para não aplicar rollout em worktrees paralelos por engano.
+- Antes de commit/push, é obrigatório descobrir a política de branch do repo dono; não se deve assumir `main` quando o fluxo real usa `feature/*`, `homologation` ou outro branch operacional.
+- Quando o toolkit fornecer auditoria de baseline de workspace, ela deve ser executada junto com compliance e precedence para fechar o diagnóstico global com evidência completa.
 - Em cenários com arquivos fora de repositório, o fluxo correto é reportar como mudança local ou gerar patch, nunca forçar commit/push.
 
 ## Limites e escopo
