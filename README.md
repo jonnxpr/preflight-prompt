@@ -26,6 +26,13 @@ Este projeto fornece um prompt base para orientar uma IA a:
 - `PRE-FLIGHT-PROMPT.md`: prompt principal (copiar e colar na IA alvo).
 - `README.md`: documentação do projeto e guia de uso.
 
+## Superficies nativas de enforcement
+
+- `PRE-FLIGHT.md` e uma superficie de governanca e prova, mas nao e sozinho uma superficie nativa de enforcement do GitHub Copilot CLI.
+- O gate critico de preflight e o roteamento principal tambem precisam viver em `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md` e `.github/instructions/*.instructions.md`.
+- `.github/skills/*` ajuda o Copilot CLI, mas nao deve ser a unica camada de enforcement para comportamento critico.
+- O OpenCode descobre slash commands em `.opencode/commands/` (plural).
+
 ## Como usar
 
 1. Abra o arquivo `PRE-FLIGHT-PROMPT.md`.

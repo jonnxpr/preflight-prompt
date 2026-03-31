@@ -1,0 +1,49 @@
+# Copilot Base Instructions - Preflight Prompt
+
+## Purpose
+
+- Provide the shared CLI-native governance contract for this repository.
+- Keep the repository focused on docs/governance only.
+- Keep sibling-governance ownership explicit and product-code ownership out of scope.
+
+## Mandatory hierarchy
+
+1. `.copilot/base-instructions.md`
+2. `CLAUDE.md`
+3. `.github/copilot-instructions.md`
+4. `.github/instructions/*.instructions.md`
+5. `.github/skills/development-standards/SKILL.md`
+6. `.opencode/skills/development-standards/SKILL.md`
+7. `.agent/rules/development-standards.md`
+
+## CLI-native parity note
+
+- `PRE-FLIGHT.md` is governance memory and proof discipline, not the sole native Copilot CLI enforcement surface.
+- Critical gate and routing behavior must also live in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`.
+- `.github/skills/*/SKILL.md` and `.opencode/skills/*/SKILL.md` reinforce the contract; they are not the sole enforcement layer for Copilot CLI or OpenCode.
+- OpenCode command discovery uses `.opencode/commands/`.
+
+## Tasks governance (mandatory)
+
+- Read `tasks/todo.md` and `tasks/lessons.md` before technical work when `tasks/` exists.
+- If `tasks/` is missing, create both files before technical work.
+
+## Context7 documentation policy (mandatory)
+
+- Use Context7 before implementation, refactor, and review work.
+
+## MCP credential discovery and connection consent (mandatory)
+
+- Before connecting to any MCP server, request user confirmation and list the credential source(s) to be used (redacted; never print secret values).
+- Discovery must cover workspace/project files, OpenCode config, `.copilot/mcp-config.json`, VS Code `profiles/*/mcp.json`, `~/.gemini/antigravity/mcp_config.json`, and referenced environment variables such as `CONTEXT7_API_KEY`.
+- Treat GitHub Copilot CLI as a first-class runtime alongside OpenCode, Copilot VS Code, and Gemini/Antigravity.
+
+## Mandatory multi-agent orchestration skill
+
+- For non-trivial docs/governance work, apply `orchestrate-multi-agents` before implementation and keep the `Template DAG 100% compliance`.
+- Owners/tasks may be reduced when not applicable, but mandatory gates cannot be removed.
+
+## Mandatory final code review, cross-validation, and factual integrity
+
+- Finish only after final code review plus evidence-based cross-validation.
+- Validate correctness, readability, compatibility, and governance-surface consistency before marking work complete.

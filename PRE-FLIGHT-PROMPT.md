@@ -69,6 +69,9 @@ Create/update an instruction architecture that is:
    - Detect what each environment supports.
    - If a feature is unsupported in a given IDE, apply an equivalent fallback.
    - Do not rely on a single file type for a critical guarantee.
+   - `PRE-FLIGHT.md` is governance memory and proof discipline, but it is not by itself a native GitHub Copilot CLI enforcement surface.
+   - Critical gate and routing behavior must also live in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`.
+   - `.github/skills/*` can reinforce Copilot CLI behavior, but it must not be the sole enforcement layer for critical guarantees.
 
 5. **Short critical file at the top**
    - Keep critical rules at the top of `.github/copilot-instructions.md` to avoid losing essential instructions in environments with limited read ranges.
@@ -401,6 +404,7 @@ Consider the work complete only if:
 13. Generated SARIF artifacts are not versioned and are ignored by Git.
 14. Governance toolkit global execution covers all detected targets, each with explicit score evidence.
 15. The architecture explicitly supports OpenCode, GitHub Copilot VS Code, GitHub Copilot CLI, and Antigravity/Gemini.
+    - `PRE-FLIGHT.md` alone is not enough for Copilot CLI; critical gate/routing behavior must also exist in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`, while `.github/skills/*` stays a reinforcement layer only.
 16. Git repository discovery handles both non-repo roots and repo roots with nested repositories.
 17. Precedence verification is semantic, includes `CLAUDE.md`, and avoids brittle first-occurrence matching.
 18. MCP discovery/runtime scan covers `.copilot/mcp-config.json`, `~/.gemini/antigravity/mcp_config.json`, and all VS Code profiles dynamically (no fixed profile id assumptions).
