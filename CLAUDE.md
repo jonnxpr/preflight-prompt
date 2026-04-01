@@ -14,8 +14,12 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 ## Tasks governance (mandatory)
 
 - Read `tasks/todo.md` and `tasks/lessons.md` before technical work.
-- If `tasks/` is missing, create `tasks/todo.md` and `tasks/lessons.md` before technical work.
+- If `tasks/` is missing, create `tasks/todo.md` and `tasks/lessons.md` before technical work and preserve the canonical top blocks.
 - Keep the plan updated during execution.
+- `tasks/lessons.md` must preserve the exact canonical top block.
+- New lessons must be appended as dated entries below the template.
+- Historical lessons must never be replaced by placeholders.
+- `tasks/todo.md` must track the current non-trivial work with objective, execution plan, expected evidence, and status/result.
 
 ## CLI-native parity note
 

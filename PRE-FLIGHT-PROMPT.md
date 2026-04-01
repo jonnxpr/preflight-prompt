@@ -89,10 +89,40 @@ Create/update an instruction architecture that is:
    - Commit message output must follow Conventional Commits and Brazilian Portuguese rules exactly.
 
 9. **Mandatory tasks bootstrap and usage**
-   - If `tasks/` is missing, create `tasks/todo.md` and `tasks/lessons.md` with clear usage instructions.
+   - If `tasks/` is missing, create `tasks/todo.md` and `tasks/lessons.md` with the exact canonical top blocks below.
    - If `tasks/` exists, read both files fully before technical work.
+   - `tasks/lessons.md` must preserve the exact canonical top block below.
+   - New lessons must be appended as dated entries below the template.
+   - Historical lessons must never be replaced by placeholders.
+   - `tasks/todo.md` must track the current non-trivial work with objective, execution plan, expected evidence, and status/result.
    - Always apply existing lessons from `tasks/lessons.md`.
-   - Continuously update `tasks/lessons.md` whenever new lessons are learned.
+
+     `tasks/lessons.md`
+
+     ```md
+     # Lessons Learned
+
+     Registre aqui licoes apos correcoes explicitas do usuario para evitar repeticao de erros.
+
+     - Data:
+     - Contexto:
+     - Correcao recebida:
+     - Regra preventiva:
+     - Como validar na proxima vez:
+     ```
+
+     `tasks/todo.md`
+
+     ```md
+     # Task Plan
+
+     Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace.
+
+     - Objetivo:
+     - Plano de execucao:
+     - Evidencias esperadas:
+     - Status/Resultado:
+     ```
 
 10. **Mandatory Context7 consultation and modernization criteria**
     - Before implementation/refactor/review, always consult Context7 MCP for the technologies involved.
@@ -232,6 +262,8 @@ Create/update an instruction architecture that is:
     - A sibling governance repo owns shared governance docs and migration memory, not application code.
     - It must not become the owner of child-repo branches, releases, CI, repo-local `.specify/`, repo-local `specs/`, or repo-local instruction files unless a migration explicitly moves that ownership.
     - Bootstrap every governance sibling with at least `README.md`, `tasks/todo.md`, `tasks/lessons.md`, and a `.gitignore` that ignores generated governance evidence by default.
+    - The sibling `tasks/lessons.md` must preserve the exact canonical top block, append dated lessons below it, and never replace historical lessons with placeholders.
+    - The sibling `tasks/todo.md` must track current non-trivial work with objective, execution plan, expected evidence, and status/result.
     - Document workspace targets and non-ownership boundaries in the governance sibling `README.md`.
     - After creating the governance sibling, update the primary workspace `README.md` and root instruction files (`PRE-FLIGHT.md`, `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`) so they point to the sibling repo as the canonical home for long-lived shared governance memory.
 
@@ -294,7 +326,7 @@ Create/update (as applicable to the project):
 - `AGENTS.md`
 - `GEMINI.md`
 - `opencode.json` (minimal)
-- `tasks/todo.md` and `tasks/lessons.md` (create if missing with usage guidance)
+- `tasks/todo.md` and `tasks/lessons.md` (create if missing with the exact canonical top blocks)
 
 #### B) Copilot layer
 
@@ -339,8 +371,11 @@ Create/update (as applicable to the project):
 
 - Ensure root instructions explicitly state:
   - read `tasks/todo.md` and `tasks/lessons.md` before technical tasks (when `tasks/` exists)
-  - create both files if missing with usage instructions
-  - continuously update `tasks/lessons.md` during execution
+  - create both files if missing with the exact canonical top blocks
+  - `tasks/lessons.md` must preserve the exact canonical top block
+  - new lessons must be appended as dated entries below the template
+  - historical lessons must never be replaced by placeholders
+  - `tasks/todo.md` must track the current non-trivial work with objective, execution plan, expected evidence, and status/result
 
 #### G) Context7 governance (mandatory)
 
@@ -396,7 +431,7 @@ Consider the work complete only if:
 5. The configuration works for an existing project and also for bootstrapping a new project.
 6. Minimal validation is provided (recommended commands and checks).
 7. Commit-message rules are enforced in OpenCode and Antigravity by explicit mandatory references.
-8. Tasks governance is enforced: `tasks/` exists (or is created), files are read, and `lessons.md` is continuously updated.
+8. Tasks governance is enforced: `tasks/` exists (or is created), files are read, `tasks/lessons.md` preserves the exact canonical top block, historical lessons are preserved below it, and `tasks/todo.md` tracks current non-trivial work with objective, execution plan, expected evidence, and status/result.
 9. Context7 governance is enforced: latest docs are consulted and modernization decisions are compatibility-aware.
 10. Skill discoverability is enforced: all `SKILL.md` files include valid `name` + `description` YAML frontmatter.
 11. Instruction references are valid: no missing file paths in settings/instruction arrays.

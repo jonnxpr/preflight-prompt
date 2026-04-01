@@ -1,8 +1,12 @@
-# Lessons
+# Lessons Learned
 
-- Registre aqui regras novas, correcoes explicitas e aprendizados reutilizaveis.
-- Consulte este arquivo antes de qualquer trabalho tecnico.
-- Atualize continuamente quando surgir uma nova licao.
+Registre aqui licoes apos correcoes explicitas do usuario para evitar repeticao de erros.
+
+- Data:
+- Contexto:
+- Correcao recebida:
+- Regra preventiva:
+- Como validar na proxima vez:
 
 ## 2026-03-28 - Precedencia local em nested repos precisa ser explicita
 

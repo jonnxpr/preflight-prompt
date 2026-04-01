@@ -1,5 +1,8 @@
-# Todo
+# Task Plan
 
-- Registre aqui o plano objetivo da atividade atual.
-- Marque progresso durante a execucao.
-- Nao conclua itens sem evidencia objetiva.
+Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace.
+
+- Objetivo:
+- Plano de execucao:
+- Evidencias esperadas:
+- Status/Resultado:

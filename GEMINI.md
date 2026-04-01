@@ -12,7 +12,12 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 ## Hard preflight gate (mandatory)
 
 - Read `README.md`, `PRE-FLIGHT-PROMPT.md`, `.copilot/base-instructions.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, applicable `.github/instructions/*.instructions.md`, and `.agent/rules/development-standards.md` before technical output.
-- Read `tasks/todo.md` and `tasks/lessons.md` before technical work when `tasks/` exists; create both if missing.
+- Read `tasks/todo.md` and `tasks/lessons.md` fully before technical work when `tasks/` exists.
+- If `tasks/` is missing, create both files before technical work and preserve the canonical top blocks.
+- `tasks/lessons.md` must preserve the exact canonical top block.
+- New lessons must be appended as dated entries below the template.
+- Historical lessons must never be replaced by placeholders.
+- `tasks/todo.md` must track the current non-trivial work with objective, execution plan, expected evidence, and status/result.
 - Start the response with `Preflight OK: <file1>, <file2>, ...`.
 - If preflight is incomplete, reply only `BLOCKED: preflight incompleto` and one objective next action.
 - For commit creation or commit-message generation, read `.github/copilot-commit-message-instructions.md`.

@@ -17,7 +17,11 @@ trigger: always_on
 - Treat `.github/skills/*/SKILL.md` and `.opencode/skills/*/SKILL.md` as reinforcement layers.
 - OpenCode command discovery uses `.opencode/commands/`.
 - Read `tasks/todo.md` and `tasks/lessons.md` before technical work when they exist.
-- If `tasks/` is missing, create both files before technical work.
+- If `tasks/` is missing, create both files before technical work and preserve the canonical top blocks.
+- `tasks/lessons.md` must preserve the exact canonical top block.
+- New lessons must be appended as dated entries below the template.
+- Historical lessons must never be replaced by placeholders.
+- `tasks/todo.md` must track the current non-trivial work with objective, execution plan, expected evidence, and status/result.
 - Use Context7 before implementation, refactor, and review decisions.
 - Before connecting to any MCP server, request user confirmation and list the credential source(s) to be used (redacted; never print secret values).
 
