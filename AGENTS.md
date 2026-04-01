@@ -21,18 +21,13 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 ## CLI-native parity note
 
 - `PRE-FLIGHT.md` is governance memory, not the sole native enforcement surface for GitHub Copilot CLI.
-- Critical gate and routing behavior must live in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`.
-- `.github/skills/*/SKILL.md` and `.opencode/skills/*/SKILL.md` reinforce the contract; they are not the sole enforcement layer.
+- Keep critical gate and routing behavior in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`; `.github/skills/*/SKILL.md` and `.opencode/skills/*/SKILL.md` only reinforce that contract.
 - OpenCode command discovery uses `.opencode/commands/`.
 
 ## Tasks governance (mandatory)
 
-- Read `tasks/todo.md` and `tasks/lessons.md` before technical work when `tasks/` exists.
-- If `tasks/` is missing, create both files before technical work and preserve the canonical top blocks.
-- `tasks/lessons.md` must preserve the exact canonical top block.
-- New lessons must be appended as dated entries below the template.
-- Historical lessons must never be replaced by placeholders.
-- `tasks/todo.md` must track the current non-trivial work with objective, execution plan, expected evidence, and status/result.
+- Read `tasks/todo.md` and `tasks/lessons.md` when `tasks/` exists; otherwise create both using the canonical top blocks.
+- Preserve those canonical top blocks, append dated lessons without replacing history, and keep `tasks/todo.md` updated with objective, execution plan, expected evidence, and status/result.
 
 ## Context7 documentation policy (mandatory)
 
@@ -46,16 +41,11 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 
 ## Governance automation (mandatory)
 
-- Secret scan: `./tools/governance/scan-secrets.ps1`
-- Instruction sync: `python ./tools/governance/sync-instructions.py`
-- Compliance audit: `python ./tools/governance/audit-compliance.py`
-- Precedence audit: `python ./tools/governance/verify-precedence.py`
+- Secret scan: `./tools/governance/scan-secrets.ps1`; instruction sync: `python ./tools/governance/sync-instructions.py`; compliance audit: `python ./tools/governance/audit-compliance.py`; precedence audit: `python ./tools/governance/verify-precedence.py`
 
 ## Mandatory multi-agent orchestration skill
 
-- For non-trivial docs/governance work, apply `orchestrate-multi-agents` before implementation and keep the `Template DAG 100% compliance`.
-- Owners/tasks may be reduced when not applicable, but mandatory gates cannot be removed.
-- For non-trivial tasks, instantiate the `Template DAG 100% compliance` from `orchestrate-multi-agents`; owners/tasks may be reduced only when not applicable, but mandatory gates cannot be removed.
+- For non-trivial docs/governance work, apply `orchestrate-multi-agents` before implementation and keep the `Template DAG 100% compliance`; owners/tasks may be reduced only when not applicable, but mandatory gates cannot be removed.
 
 ## Mandatory final code review, cross-validation, and factual integrity
 
