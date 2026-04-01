@@ -23,10 +23,7 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 
 ## CLI-native parity note
 
-- `PRE-FLIGHT.md` is not, by itself, a native Copilot CLI enforcement surface.
-- Critical gate and routing behavior must live in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`.
-- `.github/skills/*/SKILL.md` and `.opencode/skills/*/SKILL.md` support the workflow; they are not the sole enforcement layer.
-- OpenCode command discovery uses `.opencode/commands/`.
+- Shared CLI-native enforcement and command-discovery rules follow `AGENTS.md` and `.github/copilot-instructions.md`.
 
 ## Context7 documentation policy (mandatory)
 
@@ -40,18 +37,12 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 
 ## Governance automation (mandatory)
 
-- Secret scan: `./tools/governance/scan-secrets.ps1`
-- Instruction sync: `python ./tools/governance/sync-instructions.py`
-- Compliance audit: `python ./tools/governance/audit-compliance.py`
-- Precedence audit: `python ./tools/governance/verify-precedence.py`
+- Run the local governance commands documented in `AGENTS.md` and `.github/copilot-instructions.md`.
 
 ## Mandatory multi-agent orchestration skill
 
-- For non-trivial docs/governance work, apply `orchestrate-multi-agents` before implementation and keep the `Template DAG 100% compliance`.
-- Owners/tasks may be reduced when not applicable, but mandatory gates cannot be removed.
-- For non-trivial tasks, instantiate the `Template DAG 100% compliance` from `orchestrate-multi-agents`; owners/tasks may be reduced only when not applicable, but mandatory gates cannot be removed.
+- For non-trivial docs/governance work, apply `orchestrate-multi-agents` and keep the `Template DAG 100% compliance`.
 
 ## Mandatory final code review, cross-validation, and factual integrity
 
 - Finish only after final code review plus evidence-based cross-validation.
-- Validate correctness, readability, compatibility, and governance-surface consistency before marking work complete.
