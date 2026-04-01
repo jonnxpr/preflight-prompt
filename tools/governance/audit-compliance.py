@@ -66,8 +66,10 @@ def is_ignored(path: Path) -> bool:
     value = path.as_posix().lower()
     return (
         "/.history/" in value
+        or "/.stryker-tmp/" in value
         or "/bin/" in value
         or value.startswith(".history/")
+        or value.startswith(".stryker-tmp/")
         or value.startswith("bin/")
     )
 
