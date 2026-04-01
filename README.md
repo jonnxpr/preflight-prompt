@@ -66,6 +66,7 @@ Este projeto fornece um prompt base para orientar uma IA a:
 - Mantenha regras críticas no topo dos arquivos principais de instrução;
 - Faça a validação final com `audit-compliance.py` e `verify-precedence.py` quando o projeto possuir toolkit de governança;
 - Em workspaces com vários repositórios, confirme sempre o repo dono do caminho antes de qualquer operação Git.
+- Quando houver automação de sync de instruções, limite a mutação a um manifesto explícito de arquivos próprios; nunca varra todos os markdowns do repositório.
 
 ## Aprendizados consolidados nesta versão
 

@@ -417,6 +417,7 @@ If conflicts arise, apply the more specific level while preserving global contra
 - Put universal principles in base files.
 - Put specific rules in path-specific files.
 - Keep stack details in skills/rules files, referencing manifests (source-of-truth).
+- Automated instruction sync must be manifest-driven and may mutate only explicitly declared owned files.
 
 ---
 
@@ -732,6 +733,7 @@ Now:
 
 - Secret scan: `./tools/governance/scan-secrets.ps1`
 - Instruction sync (idempotent): `python ./tools/governance/sync-instructions.py`
+  - The sync command must operate on an explicit manifest of owned targets, not broad markdown scans.
 - Compliance score/report: `python ./tools/governance/audit-compliance.py`
 - Precedence report: `python ./tools/governance/verify-precedence.py`
 - Precedence matrix: `./tools/governance/precedence-matrix.md`

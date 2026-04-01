@@ -7,14 +7,51 @@ $ErrorActionPreference = 'Stop'
 
 $currentDir = $WorkspaceRoot
 if ($WorkspaceRoot -eq (Get-Location).Path) {
-    $currentDir = Get-Location
+    $currentDir = (Get-Location).Path
 }
 
-$gitDirs = @(Get-ChildItem -Path $currentDir -Recurse -Force -Directory -ErrorAction SilentlyContinue |
-           Where-Object { $_.Name -eq ".git" } |
-           Sort-Object { $_.FullName.Length })
+function Resolve-GitRepoRoot {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
 
-if ($gitDirs.Count -eq 0) {
+    try {
+        $repoRoot = git -C $Path rev-parse --show-toplevel 2>$null
+        if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($repoRoot)) {
+            return $repoRoot.Trim()
+        }
+    } catch {
+    }
+
+    return $null
+}
+
+$directRepoRoot = Resolve-GitRepoRoot -Path $currentDir
+if ($directRepoRoot) {
+    $repoRoot = $directRepoRoot
+} else {
+    $gitEntries = @(
+        @(Get-ChildItem -Path $currentDir -Recurse -Force -Directory -Filter '.git' -ErrorAction SilentlyContinue)
+        @(Get-ChildItem -Path $currentDir -Recurse -Force -File -Filter '.git' -ErrorAction SilentlyContinue)
+    ) | Sort-Object { $_.FullName.Length }
+
+    $candidateRoots = @()
+    foreach ($gitEntry in $gitEntries) {
+        $candidateRoot = Split-Path -Parent $gitEntry.FullName
+        $resolvedRoot = Resolve-GitRepoRoot -Path $candidateRoot
+        if ($resolvedRoot) {
+            $candidateRoots += $resolvedRoot
+        }
+    }
+
+    $repoRoot = $candidateRoots |
+        Select-Object -Unique |
+        Sort-Object Length, @{ Expression = { $_ } } |
+        Select-Object -First 1
+}
+
+if (-not $repoRoot) {
     @{
         is_repo = $false
         repo_path = $null
@@ -24,9 +61,6 @@ if ($gitDirs.Count -eq 0) {
     } | ConvertTo-Json -Compress
     return
 }
-
-$gitDir = $gitDirs[0]
-$repoRoot = $gitDir.Parent.FullName
 
 try {
     $branch = git -C $repoRoot rev-parse --abbrev-ref HEAD 2>$null

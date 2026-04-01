@@ -1,0 +1,11 @@
+{
+  "targets": [
+    "PRE-FLIGHT-PROMPT.md",
+    "PRE-FLIGHT.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".copilot/base-instructions.md",
+    ".github/copilot-instructions.md"
+  ]
+}
