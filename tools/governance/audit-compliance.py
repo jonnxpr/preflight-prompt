@@ -477,10 +477,12 @@ def check_user_mcp_runtime(findings):
         runtime_targets.extend(
             [
                 appdata / "Code" / "User" / "mcp.json",
-                appdata / "Code" / "User" / "profiles" / "149c18e5" / "mcp.json",
                 appdata / "Antigravity" / "User" / "mcp.json",
             ]
         )
+        profiles_root = appdata / "Code" / "User" / "profiles"
+        if profiles_root.exists():
+            runtime_targets.extend(sorted(profiles_root.glob("*/mcp.json")))
     found_context7 = False
     for path in runtime_targets:
         if path.exists():
@@ -608,6 +610,11 @@ def main():
     parser.add_argument(
         "--strict", action="store_true", help="Exit with code 1 when any finding exists"
     )
+    parser.add_argument(
+        "--include-local-env",
+        action="store_true",
+        help="Include workstation-specific checks for user-global skills, MCP runtime configs, and local environment variables.",
+    )
     args = parser.parse_args()
 
     files = collect(MANDATORY_PATTERNS)
@@ -619,8 +626,9 @@ def main():
     check_skill_routing(findings)
     check_java_multi_agent_contract(findings)
     check_copilot_cli_skill_mirrors(findings)
-    check_global_copilot_cli_skills(findings)
-    check_user_mcp_runtime(findings)
+    if args.include_local_env:
+        check_global_copilot_cli_skills(findings)
+        check_user_mcp_runtime(findings)
     check_tasks_files(findings)
 
     score_tuple = score_from_findings(findings)
