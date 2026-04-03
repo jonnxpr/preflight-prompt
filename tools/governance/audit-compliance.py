@@ -40,6 +40,14 @@ JAVA_VERSION = "java -version"
 GRADLE_WRAPPER = "gradlew-jdk.ps1"
 MAVEN_WRAPPER = "mvn-jdk.ps1"
 
+GOVERNANCE_REGISTRY_FILE = "docs/ownership-registry.md"
+GOVERNANCE_REGISTRY_MARKERS = [
+    "Advisory only",
+    "ecosystem:",
+    "hub_path:",
+    "governance_repo:",
+]
+
 MANDATORY_PATTERNS = [
     "**/PRE-FLIGHT.md",
     "**/AGENTS.md",
@@ -508,6 +516,45 @@ def check_user_mcp_runtime(findings):
         )
 
 
+def check_governance_registries(findings):
+    home = Path.home()
+    governance_repos = {
+        "partner-governance": home
+        / "workspace"
+        / "ambiente-partner"
+        / "partner-governance",
+        "meuagendamento-governance": home / "Documents" / "meuagendamento-governance",
+        "caradhras-poc-governance": home / "Documents" / "caradhras-poc-governance",
+        "portfolio-governance": home / "Documents" / "portfolio-governance",
+        "helen-santos-portfolio-governance": home
+        / "Documents"
+        / "helen-santos-portfolio-governance",
+    }
+    for name, gov_path in sorted(governance_repos.items()):
+        if not gov_path.exists():
+            continue
+        registry = gov_path / GOVERNANCE_REGISTRY_FILE
+        if not registry.exists():
+            add_finding(
+                findings,
+                "missing_governance_registry",
+                ROOT / "tools" / "governance" / "audit-compliance.py",
+                f"Governance repo `{name}` is missing `{GOVERNANCE_REGISTRY_FILE}`.",
+                f"Create `{GOVERNANCE_REGISTRY_FILE}` following the schema in preflight-prompt/docs/ownership-registry-spec.md.",
+            )
+            continue
+        text = registry.read_text(encoding="utf-8", errors="ignore")
+        missing = [m for m in GOVERNANCE_REGISTRY_MARKERS if m not in text]
+        if missing:
+            add_finding(
+                findings,
+                "governance_registry_schema_incomplete",
+                registry,
+                f"Registry in `{name}` is missing required markers: {', '.join(missing)}.",
+                "Update the registry to include all required markers per the spec.",
+            )
+
+
 def count_findings(findings, keys):
     return sum(len(findings.get(key, [])) for key in keys)
 
@@ -538,6 +585,8 @@ def score_from_findings(findings):
         "tasks_lessons_template_drift",
         "tasks_todo_template_drift",
         "tasks_placeholder_content",
+        "missing_governance_registry",
+        "governance_registry_schema_incomplete",
     }
     critical = count_findings(findings, critical_keys)
     major = count_findings(findings, major_keys)
@@ -590,6 +639,8 @@ def emit_report(files_checked, findings, score_tuple):
             "missing_context7_runtime_config",
             "missing_context7_env",
             "missing_skill_routing",
+            "missing_governance_registry",
+            "governance_registry_schema_incomplete",
         ]
         for category in ordered:
             items = findings.get(category, [])
@@ -629,6 +680,7 @@ def main():
     if args.include_local_env:
         check_global_copilot_cli_skills(findings)
         check_user_mcp_runtime(findings)
+        check_governance_registries(findings)
     check_tasks_files(findings)
 
     score_tuple = score_from_findings(findings)
