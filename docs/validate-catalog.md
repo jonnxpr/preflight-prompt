@@ -75,9 +75,9 @@ Note: `npm test` runs `vitest --run` (non-watching by default). Do NOT pass `--w
 | Gate          | Command                                          | Expectation |
 |---------------|--------------------------------------------------|-------------|
 | validate-fast | `python tools/governance/verify-precedence.py`   | exit 0      |
-| validate-fast | `python tools/governance/audit-compliance.py`    | = 100       |
 | validate-fast | `./scripts/smoke-workspace.ps1`                  | no errors   |
 | validate-full | validate-fast + each nested repo validate-full   | all pass    |
+| validate-full | `python tools/governance/audit-compliance.py`    | = 100       |
 
 ### backend — Java 25 / Maven
 
@@ -122,8 +122,8 @@ Note: `npm test` runs `vitest run`. No lint script exists in this project — do
 | Gate          | Command                                          | Expectation |
 |---------------|--------------------------------------------------|-------------|
 | validate-fast | `python tools/governance/verify-precedence.py`   | exit 0      |
-| validate-fast | `python tools/governance/audit-compliance.py`    | = 100       |
 | validate-full | validate-fast + backend validate-full + frontend validate-full | all pass |
+| validate-full | `python tools/governance/audit-compliance.py`    | = 100       |
 
 ### backend — Java 25 / Maven
 

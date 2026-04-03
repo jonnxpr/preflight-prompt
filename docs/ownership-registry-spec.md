@@ -52,8 +52,8 @@ change_type_routing:
 ## Constraints
 
 - `writable_by` for `preflight-prompt`-owned surfaces must contain only `S3`.
-- `owner_file` must point to a file that exists; schema validator will error on missing paths.
-- `validate_fast` and `validate_full` must reference commands that exist on disk.
+- `owner_file` must point to a file that exists, or be `null` when no single instruction file governs the repo (e.g., static sites without a dedicated `AGENTS.md`); schema validator will error on non-null missing paths.
+- `validate_fast` and `validate_full` must reference commands that exist on disk. Commands may include or omit `jdk-env.ps1` prefixing depending on whether the ecosystem's build wrapper (e.g., `gradlew-jdk.ps1`, `mvn-jdk.ps1`) already invokes `jdk-env.ps1` internally — this is ecosystem-specific and not mandated by the registry schema.
 - `jdk` must match the actual output of `scripts/jdk-env.ps1` for the repo — never inferred.
 - A registry file that causes `audit-self.py --strict` to fail must not be merged.
 

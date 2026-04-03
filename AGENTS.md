@@ -39,6 +39,12 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 - Discovery must cover workspace/project files, OpenCode config, `.copilot/mcp-config.json`, VS Code `profiles/*/mcp.json`, `~/.gemini/antigravity/mcp_config.json`, and referenced environment variables such as `CONTEXT7_API_KEY`.
 - Treat GitHub Copilot CLI as a first-class runtime alongside OpenCode, Copilot VS Code, and Gemini/Antigravity.
 
+## Skill routing
+
+- Implementation/refactor: `development-standards`.
+- Review/PR: `development-standards` + `code-review`.
+- GitHub repository, workflow run, pull request, issue, release, or project-status work via `gh`: also load `.github/skills/gh-operations/SKILL.md` or `.opencode/skills/gh-operations/SKILL.md`.
+
 ## Governance automation (mandatory)
 
 - Secret scan: `./tools/governance/scan-secrets.ps1`; instruction sync: `python ./tools/governance/sync-instructions.py`; compliance audit: `python ./tools/governance/audit-compliance.py`; precedence audit: `python ./tools/governance/verify-precedence.py`

@@ -6,7 +6,7 @@
 
 ---
 
-## Phase 0 — Write the 5 canonical docs (Highest ROI, Minimal Risk)
+## Phase 0 — Write the 5 canonical docs (Highest ROI, Minimal Risk) ✅ COMPLETE
 
 **ROI**: Immediately usable — agents can load these docs as context from day 1.
 **Risk**: Minimal — additive new files only. No existing surface touched except one line in CLAUDE.md.
@@ -33,7 +33,7 @@
 
 ---
 
-## Phase 1 — Per-hub validate.ps1 wrappers (High ROI, Low Risk)
+## Phase 1 — Per-hub validate.ps1 wrappers (High ROI, Low Risk) ✅ COMPLETE
 
 **ROI**: Agents call one command instead of looking up the catalog per task.
 **Risk**: Low — new scripts only, no changes to existing ones.
@@ -65,7 +65,7 @@
 
 ---
 
-## Phase 2 — Per-ecosystem ownership registry instances (Medium ROI, Medium Risk)
+## Phase 2 — Per-ecosystem ownership registry instances (Medium ROI, Medium Risk) ✅ COMPLETE
 
 **ROI**: Agents resolve ownership and routing without parsing instruction files.
 **Risk**: Medium — new files in governance repos; sync manifests must be updated.
@@ -97,7 +97,7 @@ For each:
 
 ---
 
-## Phase 3 — Reference docs from ecosystem CLAUDE.md surfaces (Low Risk, Medium ROI)
+## Phase 3 — Reference docs from ecosystem CLAUDE.md surfaces (Low Risk, Medium ROI) ✅ COMPLETE
 
 **ROI**: Reduces agent prompt overhead — no full doc search needed to find templates.
 **Risk**: Low — one additive block per CLAUDE.md.
@@ -130,7 +130,7 @@ For each:
 
 ---
 
-## Phase 4 — Integrate registry validation into audit-workspace-baseline (Long-term, Low Risk)
+## Phase 4 — Integrate registry validation into audit-workspace-baseline (Long-term, Low Risk) ✅ COMPLETE
 
 **ROI**: Drift detection becomes automatic — no manual registry audits needed.
 **Risk**: Low — audit-only, no production code impact.
@@ -155,12 +155,12 @@ For each:
 
 ## Summary
 
-| Phase | What                            | Where                        | Risk    | ROI       | Sessions |
-|-------|---------------------------------|------------------------------|---------|-----------|----------|
-| 0     | Write 5 canonical docs          | preflight-prompt/docs/       | Minimal | Very High | 1        |
-| 1     | validate.ps1 per hub            | `<hub>/scripts/`             | Low     | High      | 2        |
-| 2     | Ownership registry instances    | `*-governance/docs/`         | Medium  | Medium    | 2–3      |
-| 3     | Reference block in CLAUDE.md    | Each ecosystem CLAUDE.md     | Low     | Medium    | 0.5      |
-| 4     | Audit registry in baseline      | tools/governance/            | Low     | Long-term | 1        |
+| Phase | What                            | Where                        | Risk    | ROI       | Sessions | Status     |
+|-------|---------------------------------|------------------------------|---------|-----------|----------|------------|
+| 0     | Write 5 canonical docs          | preflight-prompt/docs/       | Minimal | Very High | 1        | ✅ Complete |
+| 1     | validate.ps1 per hub            | `<hub>/scripts/`             | Low     | High      | 2        | ✅ Complete |
+| 2     | Ownership registry instances    | `*-governance/docs/`         | Medium  | Medium    | 2–3      | ✅ Complete |
+| 3     | Reference block in CLAUDE.md    | Each ecosystem CLAUDE.md     | Low     | Medium    | 0.5      | ✅ Complete |
+| 4     | Audit registry in baseline      | tools/governance/            | Low     | Long-term | 1        | ✅ Complete |
 
-**Recommended next action**: Phase 1 — validate.ps1 per hub. Highest immediate value after the docs are in place.
+All 5 phases have been implemented and deployed across all 5 ecosystems.
