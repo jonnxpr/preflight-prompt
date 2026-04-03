@@ -23,7 +23,7 @@
 | Partner child repos (1–2 repos)               | S0 / S1      | No overhead needed                                              |
 | MeuAgendamento root                            | S0 / S3      | Root is governance; nested repos are independent                |
 | MeuAgendamento backend + frontend             | S1           | Dual-lane, coordinated but parallel                             |
-| Caradhras backend + frontend                  | S1           | Same pattern as MeuAgendamento                                  |
+| Caradhras backend + frontend                  | S1           | Single repo with subfolder lanes (not nested git repos)         |
 | Portfolio / HelenSantosPortfolio              | S0           | Single repo, single concern                                     |
 | preflight-prompt                              | S3 (writer)  | Always canonical writer; downstream ecosystems are rollout lanes |
 | Cross-ecosystem governance change             | S3           | preflight-prompt writes first, then ecosystems propagate        |

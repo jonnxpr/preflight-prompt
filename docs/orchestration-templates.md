@@ -81,6 +81,11 @@ CONSOLIDATE
 
 **Use when**: backend + frontend change in the same feature, or any 2 parallel repos sharing a contract.
 
+**Subfolder-lane variant** (e.g., Caradhras): when both lanes live inside the same git
+repository as subfolders (not nested git repos), `repo_a` and `repo_b` are subfolder
+paths within the single repo. Owner resolution applies once at the repo root, and a
+single commit may close both lanes.
+
 ```
 OBJECTIVE
   task:         <string>
@@ -89,8 +94,8 @@ OBJECTIVE
 
 INPUTS
   contract:     <API spec or shared interface — must be defined before lanes open>
-  repo_a:       <path>   # e.g., backend/
-  repo_b:       <path>   # e.g., frontend/
+  repo_a:       <path>   # e.g., backend/ (may be a subfolder in the same repo)
+  repo_b:       <path>   # e.g., frontend/ (may be a subfolder in the same repo)
 
 GATE
   [ ] contract defined and agreed before any lane opens (contract-first)
