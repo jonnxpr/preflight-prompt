@@ -164,3 +164,43 @@ For each:
 | 4     | Audit registry in baseline      | tools/governance/            | Low     | Long-term | 1        | ✅ Complete |
 
 All 5 phases have been implemented and deployed across all 5 ecosystems.
+
+---
+
+## Phase 5 — Plan persistence rule (#45)
+
+**Objective**: Persist non-trivial orchestration plans in `plans/` for refinement, implementation guidance, and survival across compaction/context loss.
+
+**Deliverables**:
+- Rule #45 and AC #35 in canonical `PRE-FLIGHT-PROMPT.md`.
+- `## Plan persistence (mandatory)` section in all instruction surfaces (CLAUDE.md, AGENTS.md, copilot-instructions.md) across all ecosystems.
+- PLAN CHECKPOINT step added to all 5 orchestration templates (S0-S4) between GATE and first LANE.
+- `orchestrate-multi-agents` skill updated with persistence step (step 3).
+- Global router `~/.config/opencode/AGENTS.md` updated with plan persistence section.
+
+**Guardrails**:
+- Plans in `plans/` are orchestration/cross-cutting only; per-feature plans remain in `specs/<feature>/plan.md` (Speckit's domain).
+- `plans/` captures rationale/context/constraints (the "why"); `tasks/todo.md` captures status/checkboxes (the "what/when").
+- Plans are append-only after execution starts; fundamental changes require a new plan file.
+- For non-git hubs, plans go in the versioned governance sibling.
+
+**Evidence**:
+- Rule #45 and AC #35 present in PRE-FLIGHT-PROMPT.md.
+- Plan persistence section present in all CLAUDE.md, AGENTS.md, and copilot-instructions.md files across all ecosystems.
+- PLAN CHECKPOINT present in all 5 orchestration templates.
+- Partner hub mirror synced and audit-self.py --strict passes.
+
+---
+
+## Summary
+
+| Phase | What                            | Where                        | Risk    | ROI       | Sessions | Status     |
+|-------|---------------------------------|------------------------------|---------|-----------|----------|------------|
+| 0     | Write 5 canonical docs          | preflight-prompt/docs/       | Minimal | Very High | 1        | ✅ Complete |
+| 1     | validate.ps1 per hub            | `<hub>/scripts/`             | Low     | High      | 2        | ✅ Complete |
+| 2     | Ownership registry instances    | `*-governance/docs/`         | Medium  | Medium    | 2–3      | ✅ Complete |
+| 3     | Reference block in CLAUDE.md    | Each ecosystem CLAUDE.md     | Low     | Medium    | 0.5      | ✅ Complete |
+| 4     | Audit registry in baseline      | tools/governance/            | Low     | Long-term | 1        | ✅ Complete |
+| 5     | Plan persistence rule (#45)     | All instruction surfaces     | Low     | High      | 1        | ✅ Complete |
+
+All 6 phases have been implemented and deployed across all 5 ecosystems.

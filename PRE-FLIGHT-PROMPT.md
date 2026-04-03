@@ -325,6 +325,18 @@ Create/update an instruction architecture that is:
     - Remove stale next-action text once a phase is complete, and distinguish completed, in-progress, and pending work explicitly.
     - Final evidence should make it obvious which findings were fixed, which remain pending, and which were informational only.
 
+45. **Plan persistence for non-trivial work**
+    - When a non-trivial plan is finalized (S1+ orchestration mode or 3+ steps), it MUST be saved to `plans/` in the owning repo as `plan-${camelCaseName}.prompt.md`.
+    - `plans/` is versioned (tracked by git, like `tasks/`).
+    - For nested repos, the plan goes in the repo that owns the scope. Workspace-wide cross-cutting plans go in the root repo. For non-git hubs (Partner `projetos/`), hub-wide plans go in the versioned governance sibling (`partner-governance/plans/`).
+    - Plan files use a canonical minimal structure (as markdown body content, NOT YAML frontmatter): Status (active/completed/abandoned), Created date, Scope, Objective, Context & Constraints, Execution Steps, Acceptance Criteria, Decisions & Alternatives.
+    - Agents must read active plans from `plans/` before starting related work (part of preflight).
+    - `tasks/todo.md` entries reference their plan file path. Plan files reference the `todo.md` objective they implement.
+    - After execution starts, plans are append-only — original objective/steps remain unchanged, new decisions/outcomes are appended. Fundamental plan changes require a new plan file. Mark status as `completed` when the corresponding `tasks/todo.md` objective is completed with evidence.
+    - Plans in `plans/` are orchestration/cross-cutting plans. Per-feature implementation plans remain in `specs/<feature>/plan.md` (Speckit's domain). `plans/` never contains Speckit-scoped feature plans.
+    - `plans/` captures rationale, context, constraints, and alternatives (the "why"). `tasks/todo.md` captures status tracking and checkboxes (the "what/when"). These are complementary, not duplicative.
+    - Purpose: persist plans for refinement, implementation guidance, and survival across compaction/context loss.
+
 ---
 
 ## Support research and validation (required)
@@ -513,6 +525,7 @@ Consider the work complete only if:
  32. Orchestration templates require Decision Log, Definition of Done, and Risks/Leftovers/Next Steps, with a documented waiver path for truly trivial tasks.
  33. Router and skill coverage is complete across all active workspaces and first-class capabilities.
  34. Status/roadmap docs reflect real completion state with no stale next-action text.
+ 35. Non-trivial plans are persisted in `plans/` with canonical structure, pre-read by agents, bidirectionally linked to `tasks/todo.md`, and append-only after execution begins.
 
 ---
 

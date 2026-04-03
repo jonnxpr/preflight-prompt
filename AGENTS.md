@@ -29,6 +29,14 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 - Read `tasks/todo.md` and `tasks/lessons.md` when `tasks/` exists; otherwise create both using the canonical top blocks.
 - Preserve those canonical top blocks, append dated lessons without replacing history, and keep `tasks/todo.md` updated with objective, execution plan, expected evidence, and status/result.
 
+## Plan persistence (mandatory)
+
+- When a non-trivial plan is finalized (S1+ orchestration mode or 3+ steps), save it to `plans/` in the owning repo as `plan-${camelCaseName}.prompt.md`.
+- `plans/` captures rationale, context, constraints, and alternatives (the "why"). `tasks/todo.md` captures status tracking and checkboxes (the "what/when").
+- Agents must read active plans from `plans/` before starting related work.
+- After execution starts, plans are append-only. Mark status as `completed` when the corresponding `tasks/todo.md` objective is completed with evidence.
+- For non-git hubs, plans go in the versioned governance sibling (e.g., `partner-governance/plans/`).
+
 ## Context7 documentation policy (mandatory)
 
 - Use Context7 before implementation, refactor, and review work.

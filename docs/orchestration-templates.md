@@ -57,6 +57,11 @@ GATE
   [ ] preflight read for target_repo (AGENTS.md + .github/copilot-instructions.md at minimum)
   [ ] validate-fast command known (from validate-catalog.md)
 
+PLAN CHECKPOINT
+  [ ] If task has 3+ steps, persist plan to plans/plan-${camelCaseName}.prompt.md in target_repo
+      (Skip if WAIVER applies or task < 3 steps)
+  [ ] tasks/todo.md references plan file path (if plan was persisted)
+
 LANE: implementer
   agent:   general
   context: [target_repo/AGENTS.md, target_repo/.github/copilot-instructions.md, development-standards]
@@ -102,6 +107,10 @@ GATE
   [ ] owner resolved for both repos
   [ ] preflight read for both repos
   [ ] validate-fast commands known for both repos
+
+PLAN CHECKPOINT
+  [ ] Persist plan to plans/plan-${camelCaseName}.prompt.md in the repo that owns the cross-cutting scope
+  [ ] tasks/todo.md references plan file path
 
 LANES (open in parallel after gate closes)
   lane-A: implementer-A
@@ -152,6 +161,10 @@ GATE
   [ ] preflight read per repo (may be done inside each lane)
   [ ] validate-fast commands known per repo
 
+PLAN CHECKPOINT
+  [ ] Persist plan to plans/plan-${camelCaseName}.prompt.md in the canonical source or governance repo
+  [ ] tasks/todo.md references plan file path
+
 LANES (all parallel — no dependency between lanes)
   lane-1 .. lane-N: implementer-per-repo
     context: [repo_N owner files, development-standards]
@@ -193,6 +206,10 @@ GATE
   [ ] rollout scope agreed — which ecosystems are in scope
   [ ] NOT parallel — writer lane must close before any rollout lane opens
   [ ] validate-fast commands known for canonical source and all rollout targets
+
+PLAN CHECKPOINT
+  [ ] Persist plan to plans/plan-${camelCaseName}.prompt.md in the canonical source repo
+  [ ] tasks/todo.md references plan file path
 
 LANE-0: canonical-writer (sequential — must close before fan-out)
   agent:   general
@@ -245,6 +262,11 @@ GATE
   [ ] architect lane must complete before any impl lane opens
   [ ] security and QA scope defined before impl lanes close
   [ ] validate-fast and validate-full commands known for all repos
+
+PLAN CHECKPOINT
+  [ ] Persist plan to plans/plan-${camelCaseName}.prompt.md in the repo that owns the feature scope
+      (Note: per-feature implementation plans in specs/<feature>/plan.md are Speckit's domain; this checkpoint is for cross-cutting orchestration plans only)
+  [ ] tasks/todo.md references plan file path
 
 LANE-0: architect (sequential — must close before impl lanes open)
   tasks:
