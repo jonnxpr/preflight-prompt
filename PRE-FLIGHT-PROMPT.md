@@ -35,6 +35,7 @@ Create/update an instruction architecture that is:
 - free of unnecessary duplication
 - enforced by a **hard preflight gate**
 - adapted to the project's actual stack
+- a thin orchestration layer over native instruction surfaces, never a replacement source of truth
 - preserving 100% of the useful existing content
 
 ---
@@ -276,6 +277,54 @@ Create/update an instruction architecture that is:
     - For the strongest practical guarantee in this model, install a local pre-commit hook in the governance sibling repo so commits are blocked when the mirror is out of sync.
     - If the workspace has a canonical architecture runbook, root instruction files must explicitly point agents to that runbook for architecture-surface changes.
 
+36. **Thin orchestration layer and ownership boundaries**
+    - Treat orchestration docs, validate catalogs, and ownership registries as advisory coordination layers unless a repository explicitly declares them authoritative for a specific shared surface.
+    - Native enforcement surfaces remain `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`.
+    - Repo owner wins over workspace hub; sibling governance repos keep governance memory, templates, and audits, not product-code ownership.
+    - A canonical-writer model applies only to explicitly shared surfaces; it must not silently override child-repo code, repo-local instructions, or repo-local AI assets.
+
+37. **Execution-surface verification before documenting commands**
+    - Before writing validate catalogs, wrappers, examples, or rollout docs, verify the real executable surface from manifests and scripts on disk.
+    - Confirm runtime/tool versions from authoritative manifests/build files, not assumptions or stale rollout notes.
+    - Confirm wrapper signatures and required CWD semantics from the wrapper implementation itself (for example whether `mvn-jdk.ps1` accepts a project path or must run inside the module directory).
+    - Confirm `package.json` scripts exist before documenting lint/test commands; do not invent `lint` or `test` scripts, and do not pass flags from a different runner family (for example Jest flags to vitest).
+
+38. **validate-fast vs validate-full classification must be intentional**
+    - `validate-fast` should remain a quick correctness/drift gate that is cheap enough to run routinely.
+    - `validate-full` owns slower, broader, or audit-heavy gates such as builds, tests, full compliance scans, and integration checks.
+    - Do not place expensive compliance audits into `validate-fast` unless the ecosystem intentionally defines that tradeoff and documents it explicitly.
+    - If a project has no suitable fast gate (for example no `lint` script), document `skip` explicitly instead of inventing a substitute.
+
+39. **PowerShell exit-code correctness is mandatory**
+    - In PowerShell wrappers and governance automation, use `$LASTEXITCODE` for external command pass/fail checks when exit codes matter.
+    - Do not infer success by parsing stdout/stderr strings.
+    - Do not rely on `$?` for external-tool pass/fail when the script must distinguish failures precisely across chained operations.
+
+40. **Governance audit robustness and schema clarity**
+    - Governance audit scripts should use an explicit encoding strategy and tolerate mixed encodings when practical so they fail on contract drift rather than incidental decoding noise.
+    - Schema docs and validators must explicitly document optional/null fields and their semantics (for example `owner_file: null` when no single owner file exists).
+    - Strict self-audits should validate the intended governance contract, not accidental implementation assumptions.
+
+41. **Non-git hub mirror discipline must be manifest-driven**
+    - If a non-git operational hub uses a versioned mirror inside a governance sibling repo, define a manifest of mirrored files.
+    - After every change to the mirrored hub surface, run sync, verify with `--check`, and ensure strict self-audit validates mirror freshness.
+    - Mirror only declared governance source files, never generated evidence or product code.
+
+42. **Orchestration template output completeness is mandatory**
+    - Non-trivial orchestration templates must require all of: Execution Plan, dependency-aware lanes, Decision Log, Definition of Done, and Risks/Leftovers/Next Steps.
+    - Template reductions may remove owners/tasks only when truly not applicable; mandatory gates and outputs cannot be dropped.
+    - Provide an explicit waiver path for trivial single-step tasks instead of forcing orchestration ceremony where it adds no value.
+
+43. **Router and skill parity must be maintained end-to-end**
+    - When maintaining global/workspace router files, update all active workspace routes in the same change set.
+    - If GitHub operations, frontend design, or orchestration are first-class in the architecture, their routing/skill hooks must be reflected consistently across the relevant instruction surfaces.
+    - Treat missing route coverage or missing skill wiring as governance drift, not documentation polish.
+
+44. **Status and roadmap evidence must stay current**
+    - Roadmaps, rollout summaries, and governance status docs must reflect the actual current state after each phase or review round.
+    - Remove stale next-action text once a phase is complete, and distinguish completed, in-progress, and pending work explicitly.
+    - Final evidence should make it obvious which findings were fixed, which remain pending, and which were informational only.
+
 ---
 
 ## Support research and validation (required)
@@ -288,6 +337,9 @@ Before implementing:
    - agent files (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`)
    - precedence/hierarchy
    - relevant limitations
+   - actual wrapper signatures, required working-directory semantics, and supported arguments for local helper scripts
+   - actual package/build scripts and test-runner families before documenting lint/test commands or flags
+   - whether each validation command belongs in `validate-fast`, `validate-full`, or an explicit `skip`
 
 2. If documentation and practice diverge, prioritize official docs and record the discrepancy as a note.
 
@@ -299,6 +351,7 @@ Before implementing:
 
 1. Inventory the project:
    - stack, build/test/lint scripts, CI/CD, monorepo/subprojects, directory layout.
+   - record exact runtime/tool versions and command surfaces from manifests/scripts on disk, not assumptions.
 
 2. Inventory existing instruction artifacts:
     - `.github/copilot-instructions.md`
@@ -451,6 +504,15 @@ Consider the work complete only if:
 23. Child-repo discovery and rollout logic do not mistake Git worktrees for ordinary child repositories.
 24. Commit/push execution respects the owning repo branch policy instead of assuming `main`.
 25. Workspace baseline audit tools are executed when present and included in the final evidence.
+ 26. The architecture is explicitly framed as a thin orchestration layer; native instruction surfaces remain authoritative and repo-owner boundaries are documented.
+ 27. validate catalogs, wrappers, and rollout docs are derived from commands that actually exist on disk, with correct runtimes, wrapper parameters, CWD rules, and runner-specific flags.
+ 28. `validate-fast` and `validate-full` are intentionally classified; slow compliance scans stay in `validate-full` unless an explicit documented tradeoff says otherwise, and missing fast gates are represented as `skip`.
+ 29. PowerShell automation uses exit-code-safe checks (`$LASTEXITCODE`) and does not treat stdout parsing or `$?` as a precise substitute for external command failures.
+ 30. Governance audits tolerate mixed encodings where appropriate, and schema docs/validators explicitly document optional/null field semantics.
+ 31. Non-git hub mirror strategies are manifest-driven and include sync, `--check`, and strict audit freshness validation.
+ 32. Orchestration templates require Decision Log, Definition of Done, and Risks/Leftovers/Next Steps, with a documented waiver path for truly trivial tasks.
+ 33. Router and skill coverage is complete across all active workspaces and first-class capabilities.
+ 34. Status/roadmap docs reflect real completion state with no stale next-action text.
 
 ---
 
@@ -724,7 +786,7 @@ Now:
 ## Mandatory multi-agent orchestration skill
 
 - For non-trivial tasks (multi-discipline scope, parallelizable work, broad refactor/migration, high inconsistency risk, or audit-heavy requirements), always activate `orchestrate-multi-agents` before implementation.
-- Require: Execution Plan, explicit handoffs, dependency-aware parallelism, DoD quality gates, and final consolidation with Decision Log.
+- Require: Execution Plan, explicit handoffs, dependency-aware parallelism, DoD quality gates, Decision Log, and Risks/Leftovers/Next Steps.
 - Require per-agent evidence (what changed, why, and validation proof).
 - If a task is trivial/single-step, explicitly justify not using multi-agent orchestration.
 - For non-trivial tasks, instantiate the `Template DAG 100% compliance` from `orchestrate-multi-agents`; owners/tasks may be reduced only when not applicable, but mandatory gates cannot be removed.

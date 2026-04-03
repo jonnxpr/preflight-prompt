@@ -54,3 +54,18 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
   - [x] HelenSantosPortfolio `validate.ps1` — DONE (same pattern as Portfolio)
   - [x] Smoke-test fast mode — ALL 5 PASSED (Partner: 14 Java + backoffice + hub governance)
   - [x] `tasks/todo.md` update — DONE
+
+## 2026-04-03 — Consolidar aprendizados no PRE-FLIGHT-PROMPT
+
+- Objetivo: Atualizar `PRE-FLIGHT-PROMPT.md` com os aprendizados aplicados durante o rollout completo das 5 fases, as 2 rodadas de review e as correções finais em 10 repositorios.
+- Plano de execucao:
+  1. Ler o contexto obrigatorio do repositorio (`README.md`, instrucoes raiz, regras locais e `tasks/`)
+  2. Comparar o prompt atual com os aprendizados efetivamente aplicados no rollout
+  3. Adicionar regras novas e criterios de aceite para cobrir ownership, verificacao de superficie real, classificacao de validate-fast/full, robustez PowerShell, mirror discipline e completude de orquestracao
+  4. Validar com `audit-compliance.py` e `verify-precedence.py`
+- Evidencias esperadas: `PRE-FLIGHT-PROMPT.md` atualizado com regras consolidadas, `audit-compliance.py = 100`, `verify-precedence.py = 0`.
+- Status/Resultado:
+  - [x] Preflight local completo — DONE
+  - [x] Prompt consolidado com aprendizados do rollout e das reviews — DONE
+  - [x] `python tools/governance/audit-compliance.py` — 100
+  - [x] `python tools/governance/verify-precedence.py` — 0
