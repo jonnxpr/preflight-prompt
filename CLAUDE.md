@@ -46,3 +46,11 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 ## Mandatory final code review, cross-validation, and factual integrity
 
 - Finish only after final code review plus evidence-based cross-validation.
+
+## Orchestration Reference
+
+- Operational matrix, modes, and parallelization rules: see `docs/orchestration-matrix.md`
+- Orchestration templates (S0-S4): see `docs/orchestration-templates.md`
+- validate-fast/full commands per ecosystem: see `docs/validate-catalog.md`
+- Ownership registry schema: see `docs/ownership-registry-spec.md`
+- Implementation roadmap: see `docs/implementation-roadmap.md`
