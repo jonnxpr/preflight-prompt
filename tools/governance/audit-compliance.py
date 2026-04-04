@@ -376,29 +376,52 @@ def check_tasks_files(findings):
 
 
 def check_skill_routing(findings):
-    frontend_sources = [
-        ROOT / ".opencode" / "skills" / "frontend-design" / "SKILL.md",
-        ROOT / ".agent" / "skills" / "frontend-design" / "SKILL.md",
-        ROOT / ".github" / "skills" / "frontend-design" / "SKILL.md",
-    ]
-    if not any(path.exists() for path in frontend_sources):
-        return
     routing_files = [
         ROOT / "PRE-FLIGHT.md",
         ROOT / "AGENTS.md",
         ROOT / "GEMINI.md",
         ROOT / ".github" / "copilot-instructions.md",
     ]
-    if not any(
-        path.exists() and "frontend-design" in read_text(path) for path in routing_files
-    ):
-        add_finding(
-            findings,
-            "missing_skill_routing",
-            ROOT / "PRE-FLIGHT.md",
-            "frontend-design skill exists without routing mention in core instruction files.",
-            "Reference frontend-design in at least one core routing file.",
-        )
+    # All 18 skills from global AGENTS.md Skills Auto-Loading
+    # Workspace-aware: each skill is only checked if it exists locally
+    routed_skills = {
+        "development-standards": "Reference development-standards in at least one core routing file.",
+        "code-review": "Reference code-review in at least one core routing file.",
+        "testing-standards": "Reference testing-standards in at least one core routing file.",
+        "gh-operations": "Reference gh-operations in at least one core routing file.",
+        "glab-operations": "Reference glab-operations in at least one core routing file.",
+        "speckit-workflow": "Reference speckit-workflow in at least one core routing file.",
+        "orchestrate-multi-agents": "Reference orchestrate-multi-agents in at least one core routing file.",
+        "frontend-design": "Reference frontend-design in at least one core routing file.",
+        "angular-component": "Reference angular-component in at least one core routing file.",
+        "angular-di": "Reference angular-di in at least one core routing file.",
+        "angular-directives": "Reference angular-directives in at least one core routing file.",
+        "angular-forms": "Reference angular-forms in at least one core routing file.",
+        "angular-http": "Reference angular-http in at least one core routing file.",
+        "angular-routing": "Reference angular-routing in at least one core routing file.",
+        "angular-signals": "Reference angular-signals in at least one core routing file.",
+        "angular-ssr": "Reference angular-ssr in at least one core routing file.",
+        "angular-testing": "Reference angular-testing in at least one core routing file.",
+        "angular-tooling": "Reference angular-tooling in at least one core routing file.",
+    }
+    for skill_name, fix in routed_skills.items():
+        skill_sources = [
+            ROOT / ".opencode" / "skills" / skill_name / "SKILL.md",
+            ROOT / ".agent" / "skills" / skill_name / "SKILL.md",
+            ROOT / ".github" / "skills" / skill_name / "SKILL.md",
+        ]
+        if not any(path.exists() for path in skill_sources):
+            continue
+        if not any(
+            path.exists() and skill_name in read_text(path) for path in routing_files
+        ):
+            add_finding(
+                findings,
+                "missing_skill_routing",
+                ROOT / "PRE-FLIGHT.md",
+                f"{skill_name} skill exists without routing mention in core instruction files.",
+                fix,
+            )
 
 
 def check_java_multi_agent_contract(findings):
