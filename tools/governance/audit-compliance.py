@@ -412,8 +412,13 @@ def check_skill_routing(findings):
         ]
         if not any(path.exists() for path in skill_sources):
             continue
+        # For angular-* skills, also accept the glob pattern "angular-*" as valid routing
+        match_tokens = [skill_name]
+        if skill_name.startswith("angular-"):
+            match_tokens.append("angular-*")
         if not any(
-            path.exists() and skill_name in read_text(path) for path in routing_files
+            path.exists() and any(token in read_text(path) for token in match_tokens)
+            for path in routing_files
         ):
             add_finding(
                 findings,
