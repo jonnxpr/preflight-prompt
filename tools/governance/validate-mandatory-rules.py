@@ -64,9 +64,9 @@ MANDATORY_MARKERS = [
     "tasks/lessons.md",
 ]
 
-# Plan persistence markers
+# Plan persistence markers (each must appear somewhere in AGENTS.md)
 PLAN_MARKERS = [
-    "plans/plan-${camelCaseName}.prompt.md",
+    "plan-${camelCaseName}.prompt.md",
     "plans/",
     "append-only",
 ]
@@ -160,22 +160,38 @@ def check_preflight_instructions(repo_name: str, repo_path: Path) -> list[str]:
             )
         return findings
     text = read_text(preflight)
-    required = [
-        "tasks/todo.md",
-        "tasks/lessons.md",
+    # Core markers every preflight.instructions.md must have
+    core_required = [
         "Preflight OK:",
         "BLOCKED: preflight incompleto",
     ]
-    for marker in required:
+    for marker in core_required:
         if marker not in text:
             findings.append(
                 f"[{repo_name}] preflight.instructions.md missing: {marker}"
             )
+    # Tasks markers are only required in governance-repo preflight.instructions.md
+    # (product repos delegate tasks governance to AGENTS.md / .copilot/base-instructions.md)
+    if repo_name in GOVERNANCE_REPOS:
+        tasks_required = [
+            "tasks/todo.md",
+            "tasks/lessons.md",
+        ]
+        for marker in tasks_required:
+            if marker not in text:
+                findings.append(
+                    f"[{repo_name}] preflight.instructions.md missing: {marker}"
+                )
     return findings
 
 
 def check_verify_precedence(repo_name: str, repo_path: Path) -> list[str]:
     findings = []
+    # verify-precedence.py is expected in product repos and partner-governance
+    # Other governance repos use their sibling product repo's copy
+    expected_repos = PRODUCT_REPOS | {"partner-governance"}
+    if repo_name not in expected_repos:
+        return findings
     script = repo_path / "tools" / "governance" / "verify-precedence.py"
     if not script.exists():
         findings.append(f"[{repo_name}] Missing tools/governance/verify-precedence.py")
