@@ -9,6 +9,11 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 - No product code ownership.
 - Keep sibling-governance boundaries explicit and leave repo-local `.specify/`, repo-local `specs/`, and product code in their owning repositories.
 
+## Integral instruction read (mandatory)
+
+- Read all mandatory files from first line through last line.
+- If the runtime returns only partial content, continue chunked reads until EOF.
+
 ## Hard preflight gate (mandatory)
 
 - Read `README.md`, `PRE-FLIGHT-PROMPT.md`, `.copilot/base-instructions.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, applicable `.github/instructions/*.instructions.md`, and `.agent/rules/development-standards.md` before technical output.
@@ -18,7 +23,7 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 - New lessons must be appended as dated entries below the template.
 - Historical lessons must never be replaced by placeholders.
 - `tasks/todo.md` must track the current non-trivial work with objective, execution plan, expected evidence, and status/result.
-- Start the response with `Preflight OK: <file1>, <file2>, ...`.
+- Start the response with `Preflight OK: <file1>, <file2>, ...` listing every mandatory file read.
 - If preflight is incomplete, reply only `BLOCKED: preflight incompleto` and one objective next action.
 - For commit creation or commit-message generation, read `.github/copilot-commit-message-instructions.md`.
 
