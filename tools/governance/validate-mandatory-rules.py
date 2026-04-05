@@ -48,6 +48,7 @@ MANDATORY_FILES = [
     "PRE-FLIGHT.md",
     "AGENTS.md",
     "CLAUDE.md",
+    "GEMINI.md",
     ".copilot/base-instructions.md",
     ".github/copilot-instructions.md",
 ]
@@ -128,7 +129,7 @@ def check_plan_persistence(repo_name: str, repo_path: Path) -> list[str]:
             findings.append(
                 f"[{repo_name}] AGENTS.md missing plan persistence marker: {marker}"
             )
-            break  # One finding per repo is enough
+            pass  # Report all missing plan persistence markers
     return findings
 
 
@@ -198,6 +199,71 @@ def check_verify_precedence(repo_name: str, repo_path: Path) -> list[str]:
     return findings
 
 
+def check_gemini_integral_read(repo_name: str, repo_path: Path) -> list[str]:
+    """G19: Every GEMINI.md must contain the integral read section markers."""
+    findings = []
+    gemini = repo_path / "GEMINI.md"
+    if not gemini.exists():
+        return findings
+    text = read_text(gemini)
+    integral_markers = [
+        "Integral instruction read (mandatory)",
+        "Read all mandatory files from first line through last line",
+    ]
+    for marker in integral_markers:
+        if marker not in text:
+            findings.append(
+                f"[{repo_name}] GEMINI.md missing integral read marker: {marker}"
+            )
+    return findings
+
+
+def check_subproject_agents(repo_name: str, repo_path: Path) -> list[str]:
+    """G20: Subproject AGENTS.md files must contain preflight gate markers."""
+    findings = []
+    # Look for AGENTS.md one level deep (subprojects like backend/, frontend/, landingPage/)
+    for sub_agents in repo_path.glob("*/AGENTS.md"):
+        text = read_text(sub_agents)
+        rel = sub_agents.relative_to(repo_path)
+        for marker in ["Preflight OK:", "BLOCKED: preflight incompleto"]:
+            if marker not in text:
+                findings.append(
+                    f"[{repo_name}] {rel} missing preflight marker: {marker}"
+                )
+    return findings
+
+
+def check_global_agent_rules(repo_name: str, repo_path: Path) -> list[str]:
+    """G21: ~/.agent/rules/ must exist (global config check, run once for any repo)."""
+    findings = []
+    if repo_name != "preflight-prompt":
+        return findings
+    rules_dir = HOME / ".agent" / "rules"
+    if not rules_dir.exists():
+        findings.append("[global] ~/.agent/rules/ directory does not exist")
+    return findings
+
+
+def check_global_gemini_gate(repo_name: str, repo_path: Path) -> list[str]:
+    """G22: ~/.gemini/GEMINI.md must contain the gate directive."""
+    findings = []
+    if repo_name != "preflight-prompt":
+        return findings
+    gemini_global = HOME / ".gemini" / "GEMINI.md"
+    if not gemini_global.exists():
+        findings.append("[global] ~/.gemini/GEMINI.md does not exist")
+        return findings
+    text = read_text(gemini_global)
+    for marker in [
+        "Preflight OK:",
+        "BLOCKED: preflight incompleto",
+        "Integral instruction read (mandatory)",
+    ]:
+        if marker not in text:
+            findings.append(f"[global] ~/.gemini/GEMINI.md missing marker: {marker}")
+    return findings
+
+
 def run_local_audit(repo_name: str, repo_path: Path) -> list[str]:
     """Run the repo-local audit script if it exists and capture failures."""
     findings = []
@@ -251,6 +317,10 @@ def main():
         all_findings.extend(check_governance_audit(repo_name, repo_path))
         all_findings.extend(check_preflight_instructions(repo_name, repo_path))
         all_findings.extend(check_verify_precedence(repo_name, repo_path))
+        all_findings.extend(check_gemini_integral_read(repo_name, repo_path))
+        all_findings.extend(check_subproject_agents(repo_name, repo_path))
+        all_findings.extend(check_global_agent_rules(repo_name, repo_path))
+        all_findings.extend(check_global_gemini_gate(repo_name, repo_path))
 
         if not args.skip_local_audits:
             all_findings.extend(run_local_audit(repo_name, repo_path))
