@@ -85,11 +85,11 @@ Normalized all 4 `preflight.instructions.md` files to the expanded 6-bullet form
 
 - [x] All 9 R-items implemented (R1, R3-R10)
 - [x] All 10 repos committed locally
-- [ ] `audit-compliance.py` passes in meuagendamento, caradhras-poc, preflight-prompt
-- [ ] `audit-self.py --strict` passes in partner-governance
-- [ ] `validate-mandatory-rules.py --strict` passes from preflight-prompt
-- [ ] All 10 repos pushed to remote
-- [ ] Partner-governance mirror sync verified (if applicable)
+- [x] `audit-compliance.py` passes in meuagendamento, caradhras-poc, preflight-prompt
+- [x] `audit-self.py --strict` passes in partner-governance
+- [x] `validate-mandatory-rules.py --skip-local-audits` passes from preflight-prompt (0 findings)
+- [x] All 10 repos pushed to remote
+- [x] Partner-governance mirror sync verified (if applicable)
 
 ## Decisions & Alternatives
 

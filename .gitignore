@@ -28,3 +28,4 @@ tasks/precedence-report.md
 tasks/workspace-baseline-report.md
 tasks/secret-scan.sarif
 tasks/secret-triage-report.md
+tasks/cross-repo-validation-report.md
