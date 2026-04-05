@@ -16,6 +16,11 @@
 6. `.opencode/skills/development-standards/SKILL.md`
 7. `.agent/rules/development-standards.md`
 
+## Integral instruction read (mandatory)
+
+- Read all mandatory files from first line through last line.
+- If the runtime returns only partial content, continue chunked reads until EOF.
+
 ## CLI-native parity note
 
 - `PRE-FLIGHT.md` is governance memory and proof discipline, not the sole native Copilot CLI enforcement surface.

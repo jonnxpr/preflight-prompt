@@ -2,6 +2,8 @@
 
 Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github/copilot-instructions.md`.
 
+> Gate: see PRE-FLIGHT-PROMPT.md — begin each response with `Preflight OK: ...` or `BLOCKED: preflight incompleto`
+
 ## Workflow orchestration
 
 - Plan first for non-trivial docs/governance work.
