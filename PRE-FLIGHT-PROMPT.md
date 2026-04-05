@@ -83,11 +83,9 @@ Create/update an instruction architecture that is:
 7. **Auditability**
    - Deliver a list of files created/modified plus a justification per file.
 
-8. **Mandatory commit-message governance (strict)**
-   - For any commit creation or commit message generation task, it is mandatory to read and strictly apply:
-     - `.github/copilot-commit-message-instructions.md`
-   - This requirement must be explicitly added to `PRE-FLIGHT.md`, `AGENTS.md`, and `GEMINI.md`.
-   - Commit message output must follow Conventional Commits and Brazilian Portuguese rules exactly.
+8. **Commit-message rule (mandatory)**
+   - Apply `.github/copilot-commit-message-instructions.md` for all commits.
+   - Use Conventional Commits format with PT-BR content.
 
 9. **Mandatory tasks bootstrap and usage**
    - If `tasks/` is missing, create `tasks/todo.md` and `tasks/lessons.md` with the exact canonical top blocks below.
@@ -132,10 +130,10 @@ Create/update an instruction architecture that is:
     - Prefer modern and suitable features when compatible with project/runtime constraints.
     - Make scenario-based decisions (e.g., Java `record` vs DTO class, Virtual Threads for I/O-bound workloads when compatible).
 
-11. **Integral instruction-read policy (mandatory)**
-    - Every mandatory instruction file must be read fully before any technical answer.
-    - If the runtime returns partial windows, continue sequential reads until EOF.
-    - Partial reads never satisfy preflight.
+11. **Integral instruction read (mandatory)**
+    - Read all mandatory files from first line through last line.
+    - If the runtime returns only partial content, continue chunked reads until EOF.
+    - Preflight is incomplete while any required file is partially read.
 
 12. **Dirty workspace and Git hygiene (mandatory)**
     - Never revert or overwrite unrelated user changes.
