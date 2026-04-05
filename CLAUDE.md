@@ -2,7 +2,7 @@
 
 Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github/copilot-instructions.md`.
 
-> Gate: see PRE-FLIGHT-PROMPT.md — begin each response with `Preflight OK: ...` or `BLOCKED: preflight incompleto`
+> Gate: see PRE-FLIGHT.md — begin each response with `Preflight OK: ...` or `BLOCKED: preflight incompleto`
 
 ## Workflow orchestration
 
@@ -52,6 +52,11 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 ## Mandatory multi-agent orchestration skill
 
 - For non-trivial docs/governance work, apply `orchestrate-multi-agents` and keep the `Template DAG 100% compliance`.
+
+## Integral instruction read (mandatory)
+
+- Read all mandatory files from first line through last line.
+- If the runtime returns only partial content, continue chunked reads until EOF.
 
 ## Mandatory final code review, cross-validation, and factual integrity
 

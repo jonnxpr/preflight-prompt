@@ -53,6 +53,13 @@
 - Owners/tasks may be reduced when not applicable, but mandatory gates cannot be removed.
 - For non-trivial tasks, instantiate the `Template DAG 100% compliance` from `orchestrate-multi-agents`; owners/tasks may be reduced only when not applicable, but mandatory gates cannot be removed.
 
+## Plan persistence (mandatory)
+
+- When a non-trivial plan is finalized (S1+ orchestration mode or 3+ steps), save it to `plans/plan-${camelCaseName}.prompt.md` in the owning repo.
+- `plans/` captures rationale, context, constraints, and alternatives (the "why"). `tasks/todo.md` captures status tracking and checkboxes (the "what/when").
+- Agents must read active plans from `plans/` before starting related work.
+- After execution starts, plans are append-only. Mark status as `completed` when the corresponding `tasks/todo.md` objective is completed with evidence.
+
 ## Mandatory final code review, cross-validation, and factual integrity
 
 - Finish only after final code review plus evidence-based cross-validation.
