@@ -46,6 +46,7 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 - Before connecting to any MCP server, request user confirmation and list the credential source(s) to be used (redacted; never print secret values).
 - Discovery must cover workspace/project files, OpenCode config, `.copilot/mcp-config.json`, VS Code `profiles/*/mcp.json`, `~/.gemini/antigravity/mcp_config.json`, and referenced environment variables such as `CONTEXT7_API_KEY`.
 - Treat GitHub Copilot CLI as a first-class runtime alongside OpenCode, Copilot VS Code, and Gemini/Antigravity.
+- If credentials are not found, report exactly: `credentials not found for requested MCP`.
 
 ## Skill routing
 
@@ -70,3 +71,8 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 
 - Finish only after final code review plus evidence-based cross-validation.
 - Validate correctness, readability, compatibility, and governance-surface consistency before marking work complete.
+
+## Commit-message rule (mandatory)
+
+- Apply `.github/copilot-commit-message-instructions.md` for all commits.
+- Use Conventional Commits format with PT-BR content.

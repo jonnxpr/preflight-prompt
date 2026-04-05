@@ -41,7 +41,9 @@ Then include one single objective next action to unblock.
 ## MCP credential discovery and connection consent (mandatory)
 
 - Before connecting to any MCP server, request user confirmation and list the credential source(s) to be used (redacted; never print secret values).
-- Discovery must cover workspace/project files, OpenCode config, `.copilot/mcp-config.json`, VS Code `profiles/*/mcp.json`, `~/.gemini/antigravity/mcp_config.json`, and referenced environment variables such as `CONTEXT7_API_KEY`; treat GitHub Copilot CLI as a first-class runtime alongside OpenCode, Copilot VS Code, and Gemini/Antigravity.
+- Discovery must cover workspace/project files, OpenCode config, `.copilot/mcp-config.json`, VS Code `profiles/*/mcp.json`, `~/.gemini/antigravity/mcp_config.json`, and referenced environment variables such as `CONTEXT7_API_KEY`.
+- Treat GitHub Copilot CLI as a first-class runtime alongside OpenCode, Copilot VS Code, and Gemini/Antigravity.
+- If credentials are not found, report exactly: `credentials not found for requested MCP`.
 
 ## Tasks governance (mandatory)
 
@@ -60,6 +62,7 @@ Then include one single objective next action to unblock.
 
 - Read all mandatory files from first line through last line.
 - If the runtime returns only partial content, continue chunked reads until EOF.
+- Preflight is incomplete while any required file is partially read.
 
 ## Plan persistence (mandatory)
 
