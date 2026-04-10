@@ -8,7 +8,7 @@ Use this prompt with any AI to configure a repository (new or existing) with rob
 2. Provide the project path and, if desired, preferences (language, commit style, required tools).
 3. Request execution in two phases:
    - Phase 1: diagnosis + plan
-   - Phase 2: implementation
+   - Phase 2: implementation + verification + autonomous fix loop until stable
 
 ---
 
@@ -37,6 +37,11 @@ Create/update an instruction architecture that is:
 - adapted to the project's actual stack
 - a thin orchestration layer over native instruction surfaces, never a replacement source of truth
 - preserving 100% of the useful existing content
+- dynamic by default when replicating a machine/workstation environment
+- safe to run repeatedly without duplicating managed artifacts
+- able to preserve useful history while sanitizing secrets automatically
+- capable of exposing operational scripts through a GUI when a wizard/app is part of the solution
+- verified by a final consolidated acceptance gate instead of optimistic status reporting
 
 ---
 
@@ -376,6 +381,82 @@ Create/update an instruction architecture that is:
     - Dual-gate closure: code review and cross-validation are separate mandatory gates; both must pass before any task is marked complete. Cross-validation means verifying outputs against at least two independent sources of evidence.
     - These are global principles that must be present in the root AGENTS.md of every workspace.
 
+53. **Dynamic-by-default environment replication (mandatory when applicable)**
+    - If the task is to replicate an existing machine/workstation architecture, treat it as an operational migration product, not only a repository bootstrap.
+    - Discover automatically, do not hardcode: username, home directory, documents directory, editor profile IDs, runtime-specific paths, package locations, and environment-specific roots whenever that information can be obtained safely at runtime.
+    - Prefer runtime-generated configs/templates over shipping static files with embedded absolute paths.
+
+54. **Portable credentials and required/optional integration classification**
+    - If the solution includes credential export/import across operating systems, use a portable format and avoid OS-specific encryption that cannot be consumed on the target system.
+    - Classify credentials and integrations explicitly as:
+      - required for the main flow
+      - optional for advanced/specific scenarios
+      - diagnostic-only
+    - Missing optional credentials must not be reported as if the main flow is broken.
+    - Example principle: a core API key + region may be required, while OAuth client credentials may be optional depending on the actual runtime scenario.
+
+55. **History preservation with automatic sanitization**
+    - If preserving local history/logs/session artifacts is part of the architecture, keep useful history but sanitize secrets automatically.
+    - Redact tokens, API keys, passwords, DSNs with credentials, OAuth secrets, and similar sensitive values.
+    - Remove or exclude binary/volatile artifacts that do not carry useful migration value.
+
+56. **Zero-interaction by default**
+    - Automate every step that does not require a real human decision.
+    - Only stop to ask the user when there is:
+      - destructive or irreversible risk
+      - a real source-of-truth conflict
+      - ambiguity that materially changes the correct implementation
+      - an unavoidable external dependency, permission, or credential block
+    - Prefer autonomous verify/fix loops over batch-by-batch confirmation flows.
+
+57. **GUI orchestration requirement when a wizard/app exists**
+    - If the delivered solution includes an Electron app, wizard, installer UI, or similar graphical surface, all operational scripts created for the workflow must be executable from that interface whenever feasible.
+    - The UI must show for each operation:
+      - what it does
+      - when to use it
+      - dependencies
+      - recommended order
+      - expected result
+      - whether it is safe to run again
+    - The UI should expose both:
+      - a recommended guided flow
+      - an advanced/manual operations mode
+
+58. **Strict idempotency for operational flows**
+    - Re-running the full flow or any individual managed operation must converge to the same correct final state.
+    - Re-execution must not duplicate:
+      - config blocks
+      - shell init lines
+      - wrappers
+      - sidecars
+      - generated managed files
+      - workspace/profile-specific entries
+    - Validation should include explicit idempotency checks, not only documentation claims.
+
+59. **Final consolidated verification is mandatory for environment replication**
+    - If the task involves operational replication or installer/wizard delivery, require a final consolidated verification step.
+    - This final gate must validate at least:
+      - structural correctness
+      - runtime/tool readiness
+      - integration readiness for required components
+      - residue cleanup
+      - idempotency/duplication guards
+      - consistency between CLI flow, GUI flow, and documentation
+
+60. **Conservative status reporting**
+    - Never report `ok`, `ready`, or equivalent success states without objective evidence.
+    - If verification is partial, limited, or format-only, report `warn` instead of `ok`.
+    - If an integration cannot be validated at runtime by the available script, document that limitation explicitly instead of implying full success.
+
+61. **Autonomous review/fix loop**
+    - When reviewing an existing implementation or migration package, apply this exact operating model:
+      - revise everything that was done
+      - ensure there are no failures, problems, security gaps, or loose ends
+      - if problems are found, fix them
+      - repeat the verification/fix loop autonomously
+      - stop only when no significant problem remains
+    - This loop is the default mode for operational hardening tasks unless `--dry-run` or a real blocker applies.
+
 ---
 
 ## Support research and validation (required)
@@ -398,6 +479,25 @@ Before implementing:
 
 ## Execution plan (execute in this order)
 
+### Phase 0 — Replication-mode applicability check
+
+Before repository bootstrap decisions, determine whether the task is also an environment/machine replication scenario.
+
+If yes, additionally inventory and classify:
+
+- runtime tools and CLIs
+- local/global instruction surfaces
+- MCP wrappers and config generators
+- environment-variable sources
+- credential export/import flow
+- operational scripts
+- GUI/wizard surfaces
+- preserved history/log/session artifacts
+- final verification commands
+- required vs optional integrations
+
+For this mode, the implementation must be judged as a runnable operational package, not only as a repository instruction layout.
+
 ### Phase 1 — Diagnosis (read-only)
 
 1. Inventory the project:
@@ -418,6 +518,17 @@ Before implementing:
 3. Identify conflicts, gaps, and duplications.
 
 4. Deliver a short, actionable implementation plan.
+
+5. If the task is an environment replication/migration package, also inventory:
+   - export/import scripts
+   - install scripts
+   - validation scripts
+   - sync/regeneration scripts
+   - GUI/wizard entrypoints
+   - sidecar files and residue-cleanup behavior
+   - dynamic path discovery behavior
+   - idempotency guarantees and duplicate-risk surfaces
+   - required vs optional integrations and credentials
 
 ### Phase 2 — Implementation (intelligent merge)
 
@@ -488,6 +599,16 @@ Create/update (as applicable to the project):
 - Ensure context instruction file exists (`.github/instructions/context7.instructions.md`) and is covered by preflight.
 - Ensure modernization decisions are compatibility-aware (adopt current features only when appropriate).
 - If Context7 is unavailable, proceed with official documentation and note the gap.
+
+#### H) Environment replication package layer (when applicable)
+
+- Implement/export operational scripts with dynamic discovery of user/home/documents/profile/runtime paths.
+- Ensure credentials can be transferred portably across the target operating systems.
+- Ensure optional credentials are labeled as optional in both scripts and docs.
+- If a GUI/wizard exists, expose all operational scripts through that interface when feasible.
+- Add a final consolidated verification command/script for acceptance.
+- Add explicit idempotency guards for managed files and generated artifacts.
+- Ensure repeated execution does not accumulate duplicates or stale managed outputs.
 
 #### E) Commit-message enforcement (mandatory)
 
@@ -570,9 +691,17 @@ Consider the work complete only if:
  35. Non-trivial plans are persisted in `plans/` with canonical structure, pre-read by agents, bidirectionally linked to `tasks/todo.md`, and append-only after execution begins.
  36. Cross-repo validation passes across all managed repositories (mandatory files, markers, plan persistence, audit scripts, preflight.instructions.md scope).
  37. Skill routing audit covers all skills with glob-pattern awareness (e.g., `angular-*` covers all angular skills).
- 38. Commit-msg hook is installable across all managed repos via a single installer script, and validates Conventional Commits + PT-BR.
- 39. CI preflight enforcement workflow exists (or is documented as gitignored) in repositories where PR-level enforcement is desired.
- 40. Factual integrity and dual-gate closure are documented as global principles in root AGENTS.md.
+38. Commit-msg hook is installable across all managed repos via a single installer script, and validates Conventional Commits + PT-BR.
+39. CI preflight enforcement workflow exists (or is documented as gitignored) in repositories where PR-level enforcement is desired.
+40. Factual integrity and dual-gate closure are documented as global principles in root AGENTS.md.
+41. Environment-replication tasks are treated as operational migration products, not only repository bootstrap tasks.
+42. Dynamic discovery is used instead of hardcoded usernames, home paths, documents paths, profile IDs, or machine-specific runtime locations whenever feasible.
+43. Portable credential flows distinguish required vs optional integrations and do not report optional gaps as main-flow failure.
+44. Useful local history can be preserved while secrets are sanitized automatically and low-value volatile/binary artifacts are excluded.
+45. When a GUI or wizard exists, operational scripts are available from the interface with purpose, order, dependencies, expected outputs, and rerun-safety information.
+46. Re-running the operational flow or any managed step is idempotent and does not duplicate config blocks, shell init lines, wrappers, sidecars, or generated managed files.
+47. A final consolidated verification step validates structure, runtime readiness, required integrations, residue cleanup, idempotency, and CLI/GUI/docs consistency before declaring success.
+48. Status reporting is conservative: partial or limited verification yields `warn`, not `ok`.
 
 ---
 
@@ -818,6 +947,7 @@ Now:
 1. Perform the full diagnosis.
 2. Show the plan.
 3. Await approval to implement (or implement directly if explicitly requested with “execute without awaiting”).
+4. If the task is an operational hardening or environment-replication package, continue with an autonomous verify/fix loop until no significant problem remains.
 
 ## Mandatory final code review, cross-validation, and factual integrity
 

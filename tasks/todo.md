@@ -66,6 +66,21 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
 - Evidencias esperadas: `PRE-FLIGHT-PROMPT.md` atualizado com regras consolidadas, `audit-compliance.py = 100`, `verify-precedence.py = 0`.
 - Status/Resultado:
   - [x] Preflight local completo — DONE
-  - [x] Prompt consolidado com aprendizados do rollout e das reviews — DONE
+ - [x] Prompt consolidado com aprendizados do rollout e das reviews — DONE
+ - [x] `python tools/governance/audit-compliance.py` — 100
+ - [x] `python tools/governance/verify-precedence.py` — 0
+
+## 2026-04-10 — Consolidar aprendizados de replicacao de ambiente no PRE-FLIGHT-PROMPT
+
+- Objetivo: Atualizar `PRE-FLIGHT-PROMPT.md` para incorporar os aprendizados do pacote `D:\arquiteturaLinux`, incluindo replicacao dinamica de ambiente, credenciais portaveis, historico sanitizado, fluxo GUI/CLI, idempotencia forte, verificacao final consolidada e loop autonomo de revisao/correcao.
+- Plano de execucao:
+  1. Ler integralmente o prompt e as instrucoes obrigatorias do repositorio
+  2. Inserir regras novas para replicacao de ambiente e operacao zero-interacao
+  3. Atualizar plano de execucao e criterios de aceite do prompt
+  4. Validar com `audit-compliance.py` e `verify-precedence.py`
+- Evidencias esperadas: `PRE-FLIGHT-PROMPT.md` atualizado, audits locais verdes, novas regras cobrindo a arquitetura dinamica e operacional aprendida com `D:\arquiteturaLinux`.
+- Status/Resultado:
+  - [x] Preflight completo — DONE
+  - [x] Prompt atualizado — DONE
   - [x] `python tools/governance/audit-compliance.py` — 100
   - [x] `python tools/governance/verify-precedence.py` — 0
