@@ -17,7 +17,7 @@ applyTo: "**"
 - If preflight is incomplete, reply only `BLOCKED: preflight incompleto` and one objective next action.
 - Keep this repository scoped to docs/governance only and do not treat it as the owner of product code.
 - Critical gate and routing behavior must also live in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, and `.github/instructions/*.instructions.md`.
-- Run `python tools/governance/audit-compliance.py` before marking governance work complete.
+- Run `python3 tools/governance/audit-compliance.py` before marking governance work complete.
 
 ## Mandatory final code review, cross-validation, and factual integrity
 

@@ -548,14 +548,14 @@ def check_governance_registries(findings):
     home = Path.home()
     governance_repos = {
         "partner-governance": home
+        / "Documentos"
         / "workspace"
         / "ambiente-partner"
         / "partner-governance",
-        "meuagendamento-governance": home / "Documents" / "meuagendamento-governance",
-        "caradhras-poc-governance": home / "Documents" / "caradhras-poc-governance",
-        "portfolio-governance": home / "Documents" / "portfolio-governance",
+        "meuagendamento-governance": home / "Documentos" / "meuagendamento-governance",
+        "portfolio-governance": home / "Documentos" / "portfolio-governance",
         "helen-santos-portfolio-governance": home
-        / "Documents"
+        / "Documentos"
         / "helen-santos-portfolio-governance",
     }
     for name, gov_path in sorted(governance_repos.items()):

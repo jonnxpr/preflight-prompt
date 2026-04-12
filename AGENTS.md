@@ -56,7 +56,7 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 
 ## Governance automation (mandatory)
 
-- Secret scan: `./tools/governance/scan-secrets.ps1`; instruction sync: `python ./tools/governance/sync-instructions.py`; compliance audit: `python ./tools/governance/audit-compliance.py`; precedence audit: `python ./tools/governance/verify-precedence.py`
+- Secret scan: `./tools/governance/scan-secrets.sh`; instruction sync: `python3 ./tools/governance/sync-instructions.py`; compliance audit: `python3 ./tools/governance/audit-compliance.py`; precedence audit: `python3 ./tools/governance/verify-precedence.py`
 
 ## Mandatory multi-agent orchestration skill
 

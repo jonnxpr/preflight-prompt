@@ -7,6 +7,42 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
 - Evidencias esperadas:
 - Status/Resultado:
 
+## 2026-04-11 — Expanded governance audit loop across managed workspaces
+
+- Objetivo: Executar os planos `plans/plan-expandedGovernanceAuditLoop.prompt.md` e `plans/planFinalAuditAndSonarqubeSkillParity.prompt.md` em todos os workspaces gerenciados, agora incluindo `preflight-prompt`, corrigindo todo drift acionavel (nao apenas CRITICAL/WARNING) ate restar zero finding relevante e garantindo paridade de descoberta/roteamento da skill `sonarqube-local`.
+- Plano de execucao:
+  1. Ler integralmente o contexto obrigatorio de `preflight-prompt` e executar `plans/plan-expandedGovernanceAuditLoop.prompt.md` como plano-base desta rodada.
+  2. Auditar workspaces de produto, repositorios irmaos de governanca, `preflight-prompt` e superficies globais (`~/.config/opencode`, `~/.copilot`, `~/.agent`).
+  3. Rodar `audit-compliance.py`, `verify-precedence.py`, `validate-mandatory-rules.py` e `audit-workspace-baseline.py` quando existirem.
+  4. Corrigir findings por owner em batches seguros, incluindo drift de skills e rotas da `sonarqube-local`.
+  5. Reexecutar auditorias ate zerar drift acionavel.
+- Evidencias esperadas: relatorio final com zero findings acionaveis, verificacoes de caminhos Linux e referencias de tooling consistentes, parity de skills/governance valida, `sonarqube-local` encontravel por todas as ferramentas/projetos-alvo e scripts locais auditados novamente.
+- Status/Resultado:
+  - [x] Preflight de `preflight-prompt` concluido
+  - [x] Plano persistido em `plans/`
+  - [x] Auditoria ampliada executada
+  - [x] Correcoes por owner aplicadas
+  - [x] Paridade/routing da `sonarqube-local` garantidos
+  - [x] Reauditoria final sem findings acionaveis
+  - Evidencias finais: `python3 tools/governance/audit-compliance.py` = 100, `python3 tools/governance/verify-precedence.py` = 0, `python3 tools/governance/validate-mandatory-rules.py --strict` = Findings 0, e todas as auditorias repo-locais/self-audits restantes encerraram verdes em 2026-04-12.
+
+## 2026-04-12 — Paridade pratica Windows/Linux em entrypoints reais
+
+- Objetivo: Fechar os gaps reais de compatibilidade Windows/Linux identificados nos entrypoints de validacao e start local de `meuagendamento-workspace`, `portfolio` e `helenSantosPortfolio`.
+- Plano de execucao:
+  1. Corrigir os wrappers PowerShell para resolver automaticamente `py -3`, `python3` ou `python`.
+  2. Adicionar `validate.sh` nos repos estaticos para paridade Linux com `validate.ps1`.
+  3. Substituir `python -m http.server` por um servidor estatico pequeno em Node nativo nos sites estaticos.
+  4. Atualizar `package.json`, `README.md`, `tasks/todo.md` e o plano persistido com a evidência final.
+  5. Revalidar com `validate-fast`, builds, smoke de servidor local e `smoke-workspace.ps1`.
+- Evidencias esperadas: validadores PowerShell resilientes a launcher, `scripts/validate.sh` funcionando em Linux, `npm start` sem dependencia de Python, e comandos de validacao verdes nos tres owners.
+- Status/Resultado:
+  - [x] Resolvedor multiplataforma de launcher Python aplicado nos wrappers PowerShell afetados
+  - [x] `scripts/validate.sh` criado em `portfolio/` e `helenSantosPortfolio/`
+  - [x] `scripts/start-static.mjs` criado nos dois sites e `package.json` migrado para Node nativo
+  - [x] READMEs e `tasks/todo.md` atualizados com a nova superficie operacional
+  - [x] Evidencias finais: `pwsh -NoProfile -File scripts/smoke-workspace.ps1` verde em `meuagendamento-workspace`; `bash scripts/validate.sh fast`, `pwsh -NoProfile -File scripts/validate.ps1 -Mode fast` e `npm run build` verdes em `portfolio` e `helenSantosPortfolio`; `node scripts/start-static.mjs --host 127.0.0.1` respondeu `200` em `/` e `404` em arquivo ausente nos dois sites.
+
 ## Phase 0 — Orchestration Productivity Planning Package (2026-04-02)
 
 - Objetivo: Deliver 5-piece orchestration documentation package to `docs/` as canonical advisory layer over existing multi-workspace architecture. Thin orchestration layer only — never overrides native instruction surfaces.
@@ -67,8 +103,8 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
 - Status/Resultado:
   - [x] Preflight local completo — DONE
  - [x] Prompt consolidado com aprendizados do rollout e das reviews — DONE
- - [x] `python tools/governance/audit-compliance.py` — 100
- - [x] `python tools/governance/verify-precedence.py` — 0
+ - [x] `python3 tools/governance/audit-compliance.py` — 100
+ - [x] `python3 tools/governance/verify-precedence.py` — 0
 
 ## 2026-04-10 — Consolidar aprendizados de replicacao de ambiente no PRE-FLIGHT-PROMPT
 
@@ -82,5 +118,5 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
 - Status/Resultado:
   - [x] Preflight completo — DONE
   - [x] Prompt atualizado — DONE
-  - [x] `python tools/governance/audit-compliance.py` — 100
-  - [x] `python tools/governance/verify-precedence.py` — 0
+  - [x] `python3 tools/governance/audit-compliance.py` — 100
+  - [x] `python3 tools/governance/verify-precedence.py` — 0

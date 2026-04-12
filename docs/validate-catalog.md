@@ -13,11 +13,11 @@
 
 | Gate          | Command                                                              | Expectation |
 |---------------|----------------------------------------------------------------------|-------------|
-| validate-fast | `python tools/governance/verify-precedence.py`                       | exit 0      |
-| validate-fast | `python tools/governance/audit-workspace-baseline.py --strict`       | exit 0      |
-| validate-fast | `python tools/governance/audit-checkstyle-consistency.py --strict`   | exit 0      |
+| validate-fast | `python3 tools/governance/verify-precedence.py`                      | exit 0      |
+| validate-fast | `python3 tools/governance/audit-workspace-baseline.py --strict`      | exit 0      |
+| validate-fast | `python3 tools/governance/audit-checkstyle-consistency.py --strict`  | exit 0      |
 | validate-full | all validate-fast above                                              | all pass    |
-| validate-full | `python tools/governance/audit-compliance.py`                        | = 100       |
+| validate-full | `python3 tools/governance/audit-compliance.py`                       | = 100       |
 | validate-full | `./tools/governance/scan-secrets.ps1`                                | no findings |
 
 ### Java child repos — Java 21 / Gradle
@@ -74,10 +74,10 @@ Note: `npm test` runs `vitest --run` (non-watching by default). Do NOT pass `--w
 
 | Gate          | Command                                          | Expectation |
 |---------------|--------------------------------------------------|-------------|
-| validate-fast | `python tools/governance/verify-precedence.py`   | exit 0      |
+| validate-fast | `python3 tools/governance/verify-precedence.py`  | exit 0      |
 | validate-fast | `./scripts/smoke-workspace.ps1`                  | no errors   |
 | validate-full | validate-fast + each nested repo validate-full   | all pass    |
-| validate-full | `python tools/governance/audit-compliance.py`    | = 100       |
+| validate-full | `python3 tools/governance/audit-compliance.py`   | = 100       |
 
 ### backend — Java 25 / Maven
 
@@ -121,9 +121,9 @@ Note: `npm test` runs `vitest run`. No lint script exists in this project — do
 
 | Gate          | Command                                          | Expectation |
 |---------------|--------------------------------------------------|-------------|
-| validate-fast | `python tools/governance/verify-precedence.py`   | exit 0      |
+| validate-fast | `python3 tools/governance/verify-precedence.py`  | exit 0      |
 | validate-full | validate-fast + backend validate-full + frontend validate-full | all pass |
-| validate-full | `python tools/governance/audit-compliance.py`    | = 100       |
+| validate-full | `python3 tools/governance/audit-compliance.py`   | = 100       |
 
 ### backend — Java 25 / Maven
 
@@ -156,7 +156,7 @@ Note: No lint script exists. `npm test` runs `ng test`.
 
 | Gate          | Command                                         | Expectation |
 |---------------|-------------------------------------------------|-------------|
-| validate-fast | `python tools/governance/verify-precedence.py`  | exit 0      |
+| validate-fast | `python3 tools/governance/verify-precedence.py` | exit 0      |
 | validate-fast | `node scripts/verify-metadata-sync.mjs`         | exit 0      |
 | validate-full | validate-fast + `npm run build`                 | exit 0      |
 
@@ -170,7 +170,7 @@ Note: No `lint` or `test` scripts exist. `npm run build` includes `verify:metada
 
 | Gate          | Command                                         | Expectation |
 |---------------|-------------------------------------------------|-------------|
-| validate-fast | `python tools/governance/verify-precedence.py`  | exit 0      |
+| validate-fast | `python3 tools/governance/verify-precedence.py` | exit 0      |
 | validate-fast | `node scripts/verify-metadata-sync.mjs`         | exit 0      |
 | validate-full | validate-fast + `npm run build`                 | exit 0      |
 
@@ -182,6 +182,6 @@ Note: No `lint` or `test` scripts exist. Same build pipeline as Portfolio.
 
 | Gate          | Command                                          | Expectation |
 |---------------|--------------------------------------------------|-------------|
-| validate-fast | `python tools/governance/verify-precedence.py`   | exit 0      |
-| validate-fast | `python tools/governance/audit-compliance.py`    | = 100       |
+| validate-fast | `python3 tools/governance/verify-precedence.py`  | exit 0      |
+| validate-fast | `python3 tools/governance/audit-compliance.py`   | = 100       |
 | validate-full | same as validate-fast (no build artifact)        | —           |

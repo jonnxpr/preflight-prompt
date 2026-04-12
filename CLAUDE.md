@@ -11,7 +11,7 @@ Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github
 - Prefer the smallest safe change that preserves repository teaching content.
 - Keep this repository scoped to docs/governance only.
 - Read `PRE-FLIGHT-PROMPT.md` before editing the reusable prompt architecture or teaching content.
-- Run `python ./tools/governance/audit-compliance.py` and `python ./tools/governance/verify-precedence.py` after baseline changes.
+- Run `python3 ./tools/governance/audit-compliance.py` and `python3 ./tools/governance/verify-precedence.py` after baseline changes.
 
 ## Tasks governance (mandatory)
 

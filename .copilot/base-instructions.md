@@ -52,7 +52,6 @@
 
 - For non-trivial docs/governance work, apply `orchestrate-multi-agents` before implementation and keep the `Template DAG 100% compliance`.
 - Owners/tasks may be reduced when not applicable, but mandatory gates cannot be removed.
-- For non-trivial tasks, instantiate the `Template DAG 100% compliance` from `orchestrate-multi-agents`; owners/tasks may be reduced only when not applicable, but mandatory gates cannot be removed.
 
 ## Plan persistence (mandatory)
 

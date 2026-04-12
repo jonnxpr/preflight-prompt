@@ -7,7 +7,7 @@ orchestrates repo-local audit-compliance.py scripts where they exist,
 and performs cross-repo consistency checks independently.
 
 Usage:
-    python tools/governance/validate-mandatory-rules.py [--strict]
+    python3 tools/governance/validate-mandatory-rules.py [--strict]
 """
 
 from __future__ import annotations
@@ -24,20 +24,35 @@ OUT = TASKS / "cross-repo-validation-report.md"
 
 HOME = Path.home()
 
+REPO_ACTIVITY_MARKERS = [
+    "PRE-FLIGHT.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "README.md",
+    ".copilot",
+    ".github",
+    ".agent",
+    ".opencode",
+    "tools/governance",
+    "tasks",
+    ".git",
+]
+
 # Known repositories with their expected audit scripts
 REPOS: dict[str, Path] = {
-    "meuagendamento": HOME / "Documents" / "meuagendamento",
-    "caradhras-poc": HOME / "Documents" / "caradhras-poc",
-    "Portfolio": HOME / "Documents" / "Portfolio",
-    "HelenSantosPortfolio": HOME / "Documents" / "HelenSantosPortfolio",
-    "preflight-prompt": HOME / "Documents" / "preflight-prompt",
-    "meuagendamento-governance": HOME / "Documents" / "meuagendamento-governance",
-    "caradhras-poc-governance": HOME / "Documents" / "caradhras-poc-governance",
-    "portfolio-governance": HOME / "Documents" / "portfolio-governance",
+    "meuagendamento-workspace": HOME / "Documentos" / "meuagendamento-workspace",
+    "caradhras-poc": HOME / "Documentos" / "caradhras-poc",
+    "portfolio": HOME / "Documentos" / "portfolio",
+    "helenSantosPortfolio": HOME / "Documentos" / "helenSantosPortfolio",
+    "preflight-prompt": HOME / "Documentos" / "preflight-prompt",
+    "meuagendamento-governance": HOME / "Documentos" / "meuagendamento-governance",
+    "portfolio-governance": HOME / "Documentos" / "portfolio-governance",
     "helen-santos-portfolio-governance": HOME
-    / "Documents"
+    / "Documentos"
     / "helen-santos-portfolio-governance",
     "partner-governance": HOME
+    / "Documentos"
     / "workspace"
     / "ambiente-partner"
     / "partner-governance",
@@ -75,7 +90,6 @@ PLAN_MARKERS = [
 # Governance repos must have audit-self.py
 GOVERNANCE_REPOS = {
     "meuagendamento-governance",
-    "caradhras-poc-governance",
     "portfolio-governance",
     "helen-santos-portfolio-governance",
     "partner-governance",
@@ -83,12 +97,35 @@ GOVERNANCE_REPOS = {
 
 # Product repos must have audit-compliance.py
 PRODUCT_REPOS = {
-    "meuagendamento",
+    "meuagendamento-workspace",
     "caradhras-poc",
-    "Portfolio",
-    "HelenSantosPortfolio",
+    "portfolio",
+    "helenSantosPortfolio",
     "preflight-prompt",
 }
+
+
+def home_relative(path: Path) -> str:
+    try:
+        return f"~/{path.relative_to(HOME).as_posix()}"
+    except ValueError:
+        return path.as_posix()
+
+
+def classify_repo_root(repo_path: Path) -> tuple[bool, str]:
+    if not repo_path.exists():
+        return False, "path not present on this machine"
+    if not repo_path.is_dir():
+        return False, "path is not a directory"
+    if any((repo_path / marker).exists() for marker in REPO_ACTIVITY_MARKERS):
+        return True, ""
+    try:
+        next(repo_path.iterdir())
+    except StopIteration:
+        return False, "directory exists but is empty/inactive"
+    except OSError:
+        return False, "directory is not readable"
+    return False, "directory exists but no repo/governance markers were found"
 
 
 def read_text(path: Path) -> str:
@@ -249,9 +286,17 @@ def check_global_gemini_gate(repo_name: str, repo_path: Path) -> list[str]:
     findings = []
     if repo_name != "preflight-prompt":
         return findings
-    gemini_global = HOME / ".gemini" / "GEMINI.md"
-    if not gemini_global.exists():
-        findings.append("[global] ~/.gemini/GEMINI.md does not exist")
+    candidates = [
+        HOME / ".gemini" / "GEMINI.md",
+        HOME / ".gemini" / "antigravity" / "GEMINI.md",
+    ]
+    gemini_global = next(
+        (candidate for candidate in candidates if candidate.exists()), None
+    )
+    if gemini_global is None:
+        findings.append(
+            "[global] ~/.gemini/GEMINI.md or ~/.gemini/antigravity/GEMINI.md does not exist"
+        )
         return findings
     text = read_text(gemini_global)
     for marker in [
@@ -260,7 +305,9 @@ def check_global_gemini_gate(repo_name: str, repo_path: Path) -> list[str]:
         "Integral instruction read (mandatory)",
     ]:
         if marker not in text:
-            findings.append(f"[global] ~/.gemini/GEMINI.md missing marker: {marker}")
+            findings.append(
+                f"[global] {home_relative(gemini_global)} missing marker: {marker}"
+            )
     return findings
 
 
@@ -305,11 +352,16 @@ def main():
     args = parser.parse_args()
 
     all_findings: list[str] = []
+    skipped_repos: list[tuple[str, Path, str]] = []
+    active_repos = 0
 
     for repo_name, repo_path in sorted(REPOS.items()):
-        if not repo_path.exists():
-            all_findings.append(f"[{repo_name}] Repository path not found: {repo_path}")
+        is_active, skip_reason = classify_repo_root(repo_path)
+        if not is_active:
+            skipped_repos.append((repo_name, repo_path, skip_reason))
             continue
+
+        active_repos += 1
 
         all_findings.extend(check_mandatory_files(repo_name, repo_path))
         all_findings.extend(check_mandatory_markers(repo_name, repo_path))
@@ -329,10 +381,18 @@ def main():
     lines = [
         "# Cross-Repo Mandatory Rules Validation Report",
         "",
-        f"- Repositories checked: **{len(REPOS)}**",
+        f"- Repositories configured: **{len(REPOS)}**",
+        f"- Active repositories checked: **{active_repos}**",
+        f"- Skipped repositories: **{len(skipped_repos)}**",
         f"- Total findings: **{len(all_findings)}**",
         "",
     ]
+    if skipped_repos:
+        lines.append("## Skipped repositories")
+        lines.append("")
+        for repo_name, repo_path, reason in skipped_repos:
+            lines.append(f"- `{repo_name}` (`{home_relative(repo_path)}`): {reason}")
+        lines.append("")
     if all_findings:
         lines.append("## Findings")
         lines.append("")
@@ -340,7 +400,7 @@ def main():
             lines.append(f"- {f}")
     else:
         lines.append(
-            "All mandatory rules validated successfully across all repositories."
+            "All mandatory rules validated successfully across all active repositories."
         )
 
     OUT.write_text("\n".join(lines), encoding="utf-8")

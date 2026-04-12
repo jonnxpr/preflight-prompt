@@ -17,5 +17,5 @@
 
 ## Automated verification
 
-- Generate precedence report: `python ./tools/governance/verify-precedence.py`
-- Enforce strict mode in CI: `python ./tools/governance/verify-precedence.py --strict`
+- Generate precedence report: `python3 ./tools/governance/verify-precedence.py`
+- Enforce strict mode in CI: `python3 ./tools/governance/verify-precedence.py --strict`

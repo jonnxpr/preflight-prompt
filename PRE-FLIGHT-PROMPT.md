@@ -454,7 +454,7 @@ Create/update an instruction architecture that is:
       - ensure there are no failures, problems, security gaps, or loose ends
       - if problems are found, fix them
       - repeat the verification/fix loop autonomously
-      - stop only when no significant problem remains
+      - stop only when zero actionable findings remain
     - This loop is the default mode for operational hardening tasks unless `--dry-run` or a real blocker applies.
 
 ---
@@ -947,7 +947,7 @@ Now:
 1. Perform the full diagnosis.
 2. Show the plan.
 3. Await approval to implement (or implement directly if explicitly requested with “execute without awaiting”).
-4. If the task is an operational hardening or environment-replication package, continue with an autonomous verify/fix loop until no significant problem remains.
+4. If the task is an operational hardening or environment-replication package, continue with an autonomous verify/fix loop until zero actionable findings remain.
 
 ## Mandatory final code review, cross-validation, and factual integrity
 
@@ -983,13 +983,13 @@ Now:
 
 ## Governance automation (mandatory)
 
-- Secret scan: `./tools/governance/scan-secrets.ps1`
-- Instruction sync (idempotent): `python ./tools/governance/sync-instructions.py`
+- Secret scan: `./tools/governance/scan-secrets.sh`
+- Instruction sync (idempotent): `python3 ./tools/governance/sync-instructions.py`
   - The sync command must operate on an explicit manifest of owned targets, not broad markdown scans.
-- Compliance score/report: `python ./tools/governance/audit-compliance.py`
-- Precedence report: `python ./tools/governance/verify-precedence.py`
+- Compliance score/report: `python3 ./tools/governance/audit-compliance.py`
+- Precedence report: `python3 ./tools/governance/verify-precedence.py`
 - Precedence matrix: `./tools/governance/precedence-matrix.md`
-- Cross-repo validation (from preflight-prompt): `python ./tools/governance/validate-mandatory-rules.py [--strict] [--skip-local-audits]`
+- Cross-repo validation (from preflight-prompt): `python3 ./tools/governance/validate-mandatory-rules.py [--strict] [--skip-local-audits]`
 - Commit-message hook install: `./scripts/install-commit-msg-hook.ps1`
   - Installs `scripts/commit-msg` (Python) as a git hook across all managed repositories.
 
@@ -1070,7 +1070,7 @@ Never use `Set-Content -Encoding UTF8` as it adds BOM.
 
 ### MCP Sync Script
 
-Create a sync script (`~/.config/mcp/sync-mcp-configs.ps1`) that:
+Create a sync script (`~/.config/mcp/sync-mcp-configs-linux.ps1`) that:
 
 1. Reads environment variables from user-level scope: `[Environment]::GetEnvironmentVariable('VAR', 'User')`
 2. Updates OpenCode, Copilot, Antigravity, VS Code User, and all detected VS Code profile configs
