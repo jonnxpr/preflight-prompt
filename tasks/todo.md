@@ -43,6 +43,23 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
   - [x] READMEs e `tasks/todo.md` atualizados com a nova superficie operacional
   - [x] Evidencias finais: `pwsh -NoProfile -File scripts/smoke-workspace.ps1` verde em `meuagendamento-workspace`; `bash scripts/validate.sh fast`, `pwsh -NoProfile -File scripts/validate.ps1 -Mode fast` e `npm run build` verdes em `portfolio` e `helenSantosPortfolio`; `node scripts/start-static.mjs --host 127.0.0.1` respondeu `200` em `/` e `404` em arquivo ausente nos dois sites.
 
+## 2026-04-12 — Migracao da raiz canonica de `Documentos` para `/media/jonathan/Dados`
+
+- Objetivo: Migrar os 7 repositorios/workspaces hoje em `/home/jonathan/Documentos` para a raiz canonica `/media/jonathan/Dados/Documentos`, preservar compatibilidade por symlink em `/home/jonathan/Documentos`, atualizar superfícies fonte de verdade com o novo caminho canonico e validar operacao nos caminhos canonico e legado.
+- Plano de execucao:
+  1. Persistir o plano cross-repo em `plans/plan-documentsRootMigrationToMedia.prompt.md` e usar `preflight-prompt` como owner da memoria desta migracao.
+  2. Validar origem/destino e executar o cutover seguro: mover os 7 diretorios para `/media/jonathan/Dados/Documentos` e substituir `/home/jonathan/Documentos` por um unico symlink raiz.
+  3. Atualizar superfícies globais e repo-locais fonte de verdade que ainda referenciam o caminho antigo, preservando historicos append-only e evidencias geradas.
+  4. Revalidar leitura/navegacao nos caminhos canonico e de compatibilidade, rodar auditorias repo-locais quando houver toolkit e registrar evidencias finais.
+- Evidencias esperadas: `plan-documentsRootMigrationToMedia.prompt.md` versionado, `/home/jonathan/Documentos -> /media/jonathan/Dados/Documentos`, 7 repositorios acessiveis pelos dois caminhos, superfícies live atualizadas para a nova raiz canonica e auditorias/governance checks verdes nos owners aplicaveis.
+- Status/Resultado:
+  - [x] Preflight de `preflight-prompt` concluido para esta rodada
+  - [x] Plano persistido em `plans/`
+  - [x] Cutover da raiz `Documentos` executado
+  - [x] Superfícies live atualizadas
+  - [x] Revalidacao final com evidencias consolidadas
+  - Evidencias finais: `/home/jonathan/Documentos -> /media/jonathan/Dados/Documentos` validado por `ls -ld`; os 7 repositorios aparecem pelos dois caminhos; `python3 tools/governance/audit-compliance.py` = `100` e `python3 tools/governance/verify-precedence.py` = `0` em `preflight-prompt`; `python3 tools/governance/audit-self.py --strict` passou em `meuagendamento-governance`, `portfolio-governance` e `helen-santos-portfolio-governance`; a ultima varredura deixou apenas referencias historicas preservadas em `plans/**`, `tasks/lessons.md` e `~/.copilot/session-state/**`.
+
 ## Phase 0 — Orchestration Productivity Planning Package (2026-04-02)
 
 - Objetivo: Deliver 5-piece orchestration documentation package to `docs/` as canonical advisory layer over existing multi-workspace architecture. Thin orchestration layer only — never overrides native instruction surfaces.
