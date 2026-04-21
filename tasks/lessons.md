@@ -92,3 +92,17 @@ Registre aqui licoes apos correcoes explicitas do usuario para evitar repeticao 
 - Correcao recebida: para o runtime atual, a raiz correta dos workspaces ativos e `/media/jonathan/Dados1/Documentos`.
 - Regra preventiva: antes de qualquer rollout cross-workspace, validar a raiz operacional real em disco e tratar caminhos historicos como legados ate nova confirmacao explicita.
 - Como validar na proxima vez: confirmar que os owners alvo existem sob `/media/jonathan/Dados1/Documentos` antes de expandir inventario, edicoes ou auditorias.
+
+## 2026-04-21 - Raiz operacional mudou para `/media/jonathan/Dados2/Documentos`
+
+- Contexto: nova rodada global de audit loop foi solicitada com a informacao explicita de que workspaces/projetos ativos agora estao em `/media/jonathan/Dados2/Documentos`.
+- Correcao recebida: tratar `Dados2` como raiz operacional atual e nao reutilizar automaticamente `Dados1` como base de inventario ativo.
+- Regra preventiva: em cada nova rodada cross-workspace, revalidar a raiz operacional informada pelo usuario e confirmar owners reais em disco antes de executar auditorias ou correcoes.
+- Como validar na proxima vez: listar `/media/jonathan/Dados2/Documentos` e verificar quais repos/workspaces realmente existem antes de assumir escopo ativo.
+
+## 2026-04-21 - Skills globais nao devem depender de paths absolutos de estates ausentes
+
+- Contexto: skills/routers globais ainda apontavam Partner/Caradhras para roots absolutos que nao existiam mais em disco, o que mantinha referencias quebradas mesmo com auditorias locais verdes.
+- Correcao recebida: quando um estate opcional nao estiver presente, usar rotas condicionais/padroes (`*/workspace/ambiente-partner/projetos`, `*/caradhras-poc`) em vez de hardcodes absolutos quebrados.
+- Regra preventiva: referencias globais para workspaces opcionais devem ser path-pattern ou condicionais quando a presenca do estate nao estiver comprovada no runtime atual.
+- Como validar na proxima vez: antes de manter um path absoluto em skill/router global, confirmar que o alvo existe em disco; se nao existir, generalizar a referencia ou removê-la.

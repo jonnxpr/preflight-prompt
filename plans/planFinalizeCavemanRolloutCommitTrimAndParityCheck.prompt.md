@@ -1,6 +1,6 @@
 # Finalize Caveman Rollout Commit Trim And Parity Check
 
-**Status:** active
+**Status:** completed
 **Created:** 2026-04-20
 **Scope:** `preflight-prompt`, managed git owners under `/media/jonathan/Dados1/Documentos`, and selected global skill folders under `$HOME`
 
@@ -46,3 +46,12 @@ Fechar a rodada Caveman com tres acoes solicitadas pelo usuario: confirmar a par
   - `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help` e `caveman-review` continuam presentes nos folders por ferramenta.
   - `compress` deixou de existir nos 4 targets globais.
   - `npx skills ls -g -a opencode --json` e `npx skills ls -g -a github-copilot --json` continuam listando as 5 skills Caveman canonical com metadata de agent.
+- Commits repo-owned concluidos com a identidade `jonnxpr <joninf95@gmail.com>`:
+  - `preflight-prompt`: `3014ef4` `chore(governance): ativar caveman no preflight`
+  - `meuagendamento-workspace`: `80fd292` `chore(governance): ativar caveman no workspace`
+  - `portfolio`: `8353001` `chore(governance): ativar caveman no site`
+  - `helenSantosPortfolio`: `0011eec` `chore(governance): ativar caveman no site`
+  - `meuagendamento-governance`: `a9a25d9` `chore(governance): ativar caveman na governanca`
+  - `portfolio-governance`: `a4cdb03` `chore(governance): ativar caveman na governanca`
+  - `helen-santos-portfolio-governance`: `8b485b4` `chore(governance): ativar caveman na governanca`
+- Limites preservados: mudancas globais fora de repo permaneceram locais; mudancas alheias do usuario em `meuagendamento-workspace/dev-master.ps1`, `meuagendamento-workspace/tasks/*` e `portfolio/PROJECT_STRUCTURE.txt` nao foram incluidas em commits desta rodada.

@@ -21,19 +21,19 @@ Only stop to request user input when there is destructive or irreversible risk, 
 
 ## Scope
 
-- `/media/jonathan/Dados/Documentos/workspace/ambiente-partner/projetos`
-- `/media/jonathan/Dados/Documentos/workspace/ambiente-partner/partner-governance`
-- `/media/jonathan/Dados/Documentos/meuagendamento-workspace`
-- `/media/jonathan/Dados/Documentos/meuagendamento-workspace/backend`
-- `/media/jonathan/Dados/Documentos/meuagendamento-workspace/frontend`
-- `/media/jonathan/Dados/Documentos/meuagendamento-workspace/landingPage`
-- `/media/jonathan/Dados/Documentos/meuagendamento-governance`
-- `/media/jonathan/Dados/Documentos/caradhras-poc`
-- `/media/jonathan/Dados/Documentos/portfolio`
-- `/media/jonathan/Dados/Documentos/portfolio-governance`
-- `/media/jonathan/Dados/Documentos/helenSantosPortfolio`
-- `/media/jonathan/Dados/Documentos/helen-santos-portfolio-governance`
-- `/media/jonathan/Dados/Documentos/preflight-prompt`
+- `*/workspace/ambiente-partner/projetos` when present
+- `*/workspace/ambiente-partner/partner-governance` when present
+- `/media/jonathan/Dados2/Documentos/meuagendamento-workspace`
+- `/media/jonathan/Dados2/Documentos/meuagendamento-workspace/backend`
+- `/media/jonathan/Dados2/Documentos/meuagendamento-workspace/frontend`
+- `/media/jonathan/Dados2/Documentos/meuagendamento-workspace/landingPage`
+- `/media/jonathan/Dados2/Documentos/meuagendamento-governance`
+- `*/caradhras-poc` when present
+- `/media/jonathan/Dados2/Documentos/portfolio`
+- `/media/jonathan/Dados2/Documentos/portfolio-governance`
+- `/media/jonathan/Dados2/Documentos/helenSantosPortfolio`
+- `/media/jonathan/Dados2/Documentos/helen-santos-portfolio-governance`
+- `/media/jonathan/Dados2/Documentos/preflight-prompt`
 - `~/.config/opencode/`
 - `~/.copilot/`
 - `~/.agent/`

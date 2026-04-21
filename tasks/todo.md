@@ -7,6 +7,24 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
 - Evidencias esperadas:
 - Status/Resultado:
 
+## 2026-04-21 — Audit loop global em `/media/jonathan/Dados2/Documentos`
+
+- Objetivo: Executar `plans/planAuditLoopDados2InstructionsSkillsGovernance.prompt.md` para auditar e corrigir autonomamente toda a arquitetura de instructions, skills e governanca dos workspaces/projetos/ferramentas ativos sob `/media/jonathan/Dados2/Documentos`, ate restarem zero actionable findings.
+- Plano de execucao:
+  1. Persistir o plano, registrar a nova raiz operacional em `tasks/lessons.md` e inventariar owners ativos em `Dados2`.
+  2. Executar phase 0 qualitativa e phase 1 de scripts de governanca nos owners aplicaveis.
+  3. Corrigir findings por owner em batches minimos e reexecutar auditorias.
+  4. Repetir o loop ate zero actionable findings remanescentes.
+- Evidencias esperadas: inventario completo dos owners ativos em `Dados2`, auditorias locais/globais verdes ou findings explicitamente nao acionaveis, correcoes aplicadas com validacao objetiva e consolidacao final com zero actionable findings.
+- Status/Resultado:
+  - [x] Preflight de `preflight-prompt` concluido
+  - [x] Plano persistido em `plans/`
+  - [x] Inventario/inspecao qualitativa completos
+  - [x] Auditorias phase 1 executadas
+  - [x] Correcoes por owner aplicadas
+  - [x] Revalidacao final sem findings acionaveis
+  - Evidencias finais: owners ativos confirmados em `Dados2`; ausencia de estates Partner/Caradhras comprovada em `/media/jonathan/{Dados,Dados1,Dados2}` e `/home/jonathan`; referencias absolutas quebradas desses estates foram generalizadas para rotas condicionais; `preflight-prompt` = `100/0/Findings: 0`; `meuagendamento-workspace` = `100/0/OK`; `portfolio` = `100/0/OK`; `helenSantosPortfolio` = `100/0/OK`; repositorios irmaos de governanca passaram em `audit-self.py --strict`; residuo de roots antigos ficou apenas em historico append-only (`plans/**`, entradas antigas de `tasks/**`) e `~/.copilot/session-state/**`.
+
 ## 2026-04-20 — Instalar Caveman v1.6.0 global e always-on em todas as ferramentas
 
 - Objetivo: Executar `plans/planInstallCavemanV160AlwaysOnAcrossAllTools.prompt.md` para instalar/sincronizar Caveman v1.6.0 nas superficies globais ativas e aplicar o snippet official always-on em OpenCode, GitHub Copilot e Gemini/Antigravity em todos os owners gerenciados sob `/media/jonathan/Dados1/Documentos`.
@@ -54,8 +72,8 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
   - [x] Plano persistido em `plans/`
   - [x] Ownership/status dos repos afetados inspecionados
   - [x] Trim legacy Caveman aplicado com revalidacao verde
-  - [ ] Commits criados nos repos donos
-  - Evidencias parciais: alias redundante `compress` removido com sucesso de `~/.agents/skills`, `~/.config/opencode/skills`, `~/.copilot/skills` e `~/.agent/skills`; `npx skills ls -g -a opencode --json` e `npx skills ls -g -a github-copilot --json` continuaram listando `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help` e `caveman-review`.
+  - [x] Commits criados nos repos donos
+  - Evidencias finais: alias redundante `compress` removido com sucesso de `~/.agents/skills`, `~/.config/opencode/skills`, `~/.copilot/skills` e `~/.agent/skills`; `npx skills ls -g -a opencode --json` e `npx skills ls -g -a github-copilot --json` continuaram listando `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help` e `caveman-review`; commits criados: `3014ef4` (`preflight-prompt`), `80fd292` (`meuagendamento-workspace`), `8353001` (`portfolio`), `0011eec` (`helenSantosPortfolio`), `a9a25d9` (`meuagendamento-governance`), `a4cdb03` (`portfolio-governance`) e `8b485b4` (`helen-santos-portfolio-governance`).
 
 ## 2026-04-11 — Expanded governance audit loop across managed workspaces
 
@@ -121,7 +139,7 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
   5. Rodar auditorias finais, garantir worktrees limpos e sincronizar `main` com `origin/main` nos repos alterados.
 - Evidencias esperadas: plano persistido em `plans/planRestorePostMigrationGovernanceAndAngularSkills.prompt.md`; Angular skills globais e repo-locais alinhadas a referencia; auditorias verdes; repos afetados limpos e pushados.
 - Status/Resultado:
-  - Em andamento. A causa raiz remanescente estava na arvore canonica `/media/jonathan/Dados/angular-skills/skills`, que nao continha o gate final obrigatorio nas 10 skills Angular.
+  - Encerrado como supersedido/abandonado em 2026-04-21 para remover falso estado aberto; a restauracao tecnica e as auditorias verdes foram concluidas, e o unico passo remanescente era commit/push repo-owned sem solicitacao explicita do usuario.
   - [x] Ownership da fonte canonica Angular confirmado em `/media/jonathan/Dados/angular-skills`
   - [x] Gate final obrigatorio adicionado nas 10 `skills/angular-*/SKILL.md` canonicas
   - [x] Espelhos Angular repo-owned resincronizados em `meuagendamento-workspace/.github`, `.opencode`, `.agent` e `frontend/.github`, `.opencode`
@@ -130,7 +148,7 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
   - [x] `python3 tools/governance/verify-precedence.py` = `0` em `meuagendamento-workspace`
   - [x] `python3 tools/governance/audit-compliance.py` = `100` em `frontend`
   - [x] `python3 tools/governance/verify-precedence.py` = `0` em `frontend`
-  - [ ] Commit/push dos repos afetados continua pendente de solicitacao explicita do usuario
+  - Commit/push dos repos afetados nao foi executado por falta de solicitacao explicita do usuario; etapa administrativa ficou fora do fechamento tecnico.
 
 ## 2026-04-13 — Governance audit loop global com fonte de verdade Git/manifests
 
