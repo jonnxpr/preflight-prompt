@@ -7,6 +7,56 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
 - Evidencias esperadas:
 - Status/Resultado:
 
+## 2026-04-20 — Instalar Caveman v1.6.0 global e always-on em todas as ferramentas
+
+- Objetivo: Executar `plans/planInstallCavemanV160AlwaysOnAcrossAllTools.prompt.md` para instalar/sincronizar Caveman v1.6.0 nas superficies globais ativas e aplicar o snippet official always-on em OpenCode, GitHub Copilot e Gemini/Antigravity em todos os owners gerenciados sob `/media/jonathan/Dados1/Documentos`.
+- Plano de execucao:
+  1. Persistir o plano, registrar a correcao da raiz atual em `tasks/lessons.md` e inventariar as superficies reais de instructions/rules/skills.
+  2. Sincronizar os artefatos oficiais necessarios de Caveman v1.6.0 e executar os comandos oficiais de install quando forem suportados localmente.
+  3. Aplicar o snippet always-on oficial nas superficies nativas globais e repo-locais relevantes.
+  4. Revalidar discovery/routing/governance ate nao restarem findings acionaveis.
+- Evidencias esperadas: plano persistido em `plans/`, superfícies globais de Caveman discoverable, snippet always-on oficial presente nas rules/system prompts corretas, comandos oficiais de install registrados quando aplicados e verificacoes finais sem gaps acionaveis.
+- Status/Resultado:
+  - [x] Preflight de `preflight-prompt` concluido
+  - [x] Context7 e documentacao oficial de Caveman consultados
+  - [x] Plano persistido em `plans/`
+  - [x] Inventario completo das superficies ativas
+  - [x] Sync/install Caveman aplicado
+  - [x] Revalidacao final sem findings acionaveis
+  - Evidencias finais: `npx skills add JuliusBrussee/caveman -y` instalou 6 skills globais em `~/.agents/skills/*`; `npx skills ls -g --json` passou a listar `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help`, `caveman-review` e `compress`; o bloco `Caveman Always-On (mandatory)` foi encontrado nas 4 superficies nativas globais e em 35 superficies repo-locais; `preflight-prompt` = `100/0`, `meuagendamento-workspace` = `100/0/OK`, `portfolio` = `100/0/OK`, `helenSantosPortfolio` = `100/0/OK`, e os 3 repositorios irmaos de governanca passaram em `audit-self.py --strict`.
+
+## 2026-04-20 — Espelhar Caveman para os folders globais por ferramenta
+
+- Objetivo: Executar `plans/planMirrorCavemanSkillsIntoPerToolFolders.prompt.md` para copiar as 6 skills Caveman de `~/.agents/skills` para `~/.config/opencode/skills`, `~/.copilot/skills` e `~/.agent/skills`, reforcando discoverability/paridade por ferramenta.
+- Plano de execucao:
+  1. Persistir o plano follow-up e confirmar a fonte instalada em `~/.agents/skills`.
+  2. Copiar as 6 skills Caveman para os 3 folders globais por ferramenta.
+  3. Validar presence/discoverability e registrar evidencias finais.
+- Evidencias esperadas: `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help`, `caveman-review` e `compress` presentes em `~/.config/opencode/skills`, `~/.copilot/skills` e `~/.agent/skills`, com validacao final verde.
+- Status/Resultado:
+  - [x] Preflight de `preflight-prompt` concluido
+  - [x] Plano persistido em `plans/`
+  - [x] Espelhamento por ferramenta aplicado
+  - [x] Validacao final registrada
+  - Evidencias finais: `~/.config/opencode/skills`, `~/.copilot/skills` e `~/.agent/skills` agora contem `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help`, `caveman-review` e `compress`; `npx skills ls -g -a opencode --json` e `npx skills ls -g -a github-copilot --json` passaram a listar as 6 skills Caveman com agent metadata para OpenCode/Copilot.
+
+## 2026-04-20 — Finalizar rollout Caveman com trim e commits
+
+- Objetivo: Executar `plans/planFinalizeCavemanRolloutCommitTrimAndParityCheck.prompt.md` para fechar a rodada Caveman com parity check final, trim conservador de duplicacoes legacy e commits repo-owned.
+- Plano de execucao:
+  1. Persistir o plano final e resolver ownership Git dos repos afetados.
+  2. Inspecionar status/diff/log dos repos donos para preparar commits seguros.
+  3. Aplicar somente o trim legacy Caveman que permanecer seguro apos revalidacao.
+  4. Criar commits separados por repo dono e registrar evidencias finais.
+- Evidencias esperadas: parity check verde apos trim, surfaces legacy Caveman redundantes reduzidas, commits criados apenas nos repositorios donos das mudancas repo-owned e nenhum commit em superficies globais fora de repo.
+- Status/Resultado:
+  - [x] Preflight de `preflight-prompt` concluido
+  - [x] Plano persistido em `plans/`
+  - [x] Ownership/status dos repos afetados inspecionados
+  - [x] Trim legacy Caveman aplicado com revalidacao verde
+  - [ ] Commits criados nos repos donos
+  - Evidencias parciais: alias redundante `compress` removido com sucesso de `~/.agents/skills`, `~/.config/opencode/skills`, `~/.copilot/skills` e `~/.agent/skills`; `npx skills ls -g -a opencode --json` e `npx skills ls -g -a github-copilot --json` continuaram listando `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help` e `caveman-review`.
+
 ## 2026-04-11 — Expanded governance audit loop across managed workspaces
 
 - Objetivo: Executar os planos `plans/plan-expandedGovernanceAuditLoop.prompt.md` e `plans/planFinalAuditAndSonarqubeSkillParity.prompt.md` em todos os workspaces gerenciados, agora incluindo `preflight-prompt`, corrigindo todo drift acionavel (nao apenas CRITICAL/WARNING) ate restar zero finding relevante e garantindo paridade de descoberta/roteamento da skill `sonarqube-local`.
@@ -59,6 +109,56 @@ Registre aqui as tarefas nao triviais em execucao neste repositorio ou workspace
   - [x] Superfícies live atualizadas
   - [x] Revalidacao final com evidencias consolidadas
   - Evidencias finais: `/home/jonathan/Documentos -> /media/jonathan/Dados/Documentos` validado por `ls -ld`; os 7 repositorios aparecem pelos dois caminhos; `python3 tools/governance/audit-compliance.py` = `100` e `python3 tools/governance/verify-precedence.py` = `0` em `preflight-prompt`; `python3 tools/governance/audit-self.py --strict` passou em `meuagendamento-governance`, `portfolio-governance` e `helen-santos-portfolio-governance`; a ultima varredura deixou apenas referencias historicas preservadas em `plans/**`, `tasks/lessons.md` e `~/.copilot/session-state/**`.
+
+## 2026-04-12 — Restaurar governance e Angular skills apos a migracao
+
+- Objetivo: Restaurar todas as superficies de instructions, skills e governance que ficaram incompletas ou degradadas pela migracao para `/media/jonathan/Dados`, incluindo a sincronizacao integral das Angular skills a partir de `/media/jonathan/Dados/angular-skills/skills`.
+- Plano de execucao:
+  1. Inventariar superficies globais e repo-locais afetadas.
+  2. Detectar drift remanescente de paths, conteudos, arquivos faltantes e permissoes indevidas.
+  3. Sincronizar todas as Angular skills a partir da arvore canonica.
+  4. Restaurar as demais superficies de instructions/skills/governance com apoio da historia Git dos owners.
+  5. Rodar auditorias finais, garantir worktrees limpos e sincronizar `main` com `origin/main` nos repos alterados.
+- Evidencias esperadas: plano persistido em `plans/planRestorePostMigrationGovernanceAndAngularSkills.prompt.md`; Angular skills globais e repo-locais alinhadas a referencia; auditorias verdes; repos afetados limpos e pushados.
+- Status/Resultado:
+  - Em andamento. A causa raiz remanescente estava na arvore canonica `/media/jonathan/Dados/angular-skills/skills`, que nao continha o gate final obrigatorio nas 10 skills Angular.
+  - [x] Ownership da fonte canonica Angular confirmado em `/media/jonathan/Dados/angular-skills`
+  - [x] Gate final obrigatorio adicionado nas 10 `skills/angular-*/SKILL.md` canonicas
+  - [x] Espelhos Angular repo-owned resincronizados em `meuagendamento-workspace/.github`, `.opencode`, `.agent` e `frontend/.github`, `.opencode`
+  - [x] Espelhos Angular globais locais atualizados em `~/.config/opencode/skills`, `~/.copilot/skills` e `~/.agent/skills`
+  - [x] `python3 tools/governance/audit-compliance.py` = `100` em `meuagendamento-workspace`
+  - [x] `python3 tools/governance/verify-precedence.py` = `0` em `meuagendamento-workspace`
+  - [x] `python3 tools/governance/audit-compliance.py` = `100` em `frontend`
+  - [x] `python3 tools/governance/verify-precedence.py` = `0` em `frontend`
+  - [ ] Commit/push dos repos afetados continua pendente de solicitacao explicita do usuario
+
+## 2026-04-13 — Governance audit loop global com fonte de verdade Git/manifests
+
+- Objetivo: Executar uma nova rodada global de governance audit loop, usando como fonte de verdade as versoes e superficies corretas presentes nos repositorios Git donos de cada area, e corrigir todo drift acionavel ate restarem zero actionable findings em workspaces, projetos e ferramentas.
+- Plano de execucao:
+  1. Persistir o plano cross-workspace em `plans/planCrossWorkspaceGovernanceAuditLoopWithGitVersionTruth.prompt.md`.
+  2. Inventariar todos os owners com toolkit de governanca e seus manifests/version sources reais.
+  3. Rodar auditorias iniciais (`audit-compliance.py`, `verify-precedence.py`, `audit-workspace-baseline.py`, `audit-self.py`, `validate-mandatory-rules.py --strict`) onde existirem.
+  4. Corrigir findings por owner no menor batch seguro, sempre referenciando o repo Git dono e seus manifests/arquivos versionados reais.
+  5. Reexecutar as auditorias ate zerar actionable findings.
+- Evidencias esperadas: inventario consolidado de owners/toolkits; relatorios verdes por owner; referencias de versao/manifests coerentes com os repos reais; consolidacao final com zero actionable findings.
+- Status/Resultado:
+  - [x] Inventario consolidado dos owners/toolkits e manifests fonte de verdade
+  - [x] Auditorias iniciais e reauditorias executadas por owner
+  - [x] Drift final corrigido nos owners restantes:
+    - `meuagendamento-workspace/.github|.opencode|.agent/skills/development-standards/SKILL.md` agora deferem a versao Spring Boot para `backend/pom.xml` (atual 4.0.5)
+    - `meuagendamento-workspace/scripts/smoke-workspace.ps1` agora valida `tools/governance/scan-secrets.sh` pelo contrato Linux atual
+    - `portfolio/PROJECT_STRUCTURE.txt` agora documenta `npm start`, `npm run build:css` e `npm run build:js` em vez de `python -m http.server`
+    - `~/.config/opencode`, `~/.copilot` e `~/.agent` `skills/testing-standards/SKILL.md` agora sao fallbacks globais repo-agnosticos, sem hardcodes do estate legado
+  - [x] Verificacao qualitativa final sem findings acionaveis remanescentes nas categorias auditadas
+  - Evidencias finais:
+    - `preflight-prompt`: `python3 tools/governance/audit-compliance.py` = `100`; `python3 tools/governance/verify-precedence.py` = `0`; `python3 tools/governance/validate-mandatory-rules.py --strict` = `Findings: 0`
+    - `meuagendamento-workspace`: `python3 tools/governance/audit-compliance.py` = `100`; `python3 tools/governance/verify-precedence.py` = `0`; `python3 tools/governance/audit-workspace-baseline.py` = `OK`; `pwsh -NoProfile -File scripts/smoke-workspace.ps1` = `Workspace smoke checks passed.`
+    - `backend`: `python3 tools/governance/audit-compliance.py` = `100`; `python3 tools/governance/verify-precedence.py` = `0`
+    - `frontend`: `python3 tools/governance/audit-compliance.py` = `100`; `python3 tools/governance/verify-precedence.py` = `0`
+    - `landingPage`: `python3 tools/governance/audit-compliance.py` = `100`; `python3 tools/governance/verify-precedence.py` = `0`
+    - `portfolio`: `python3 tools/governance/audit-compliance.py` = `100`; `python3 tools/governance/verify-precedence.py` = `0`; `python3 tools/governance/audit-workspace-baseline.py` = `OK`; `bash scripts/validate.sh fast` = `validate-fast PASSED`
+  - Resultado final consolidado: zero actionable findings.
 
 ## Phase 0 — Orchestration Productivity Planning Package (2026-04-02)
 

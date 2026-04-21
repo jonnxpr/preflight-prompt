@@ -85,3 +85,10 @@ Registre aqui licoes apos correcoes explicitas do usuario para evitar repeticao 
 - Contexto: mesmo com sync/check manuais, ainda existe risco de commit no repo de governanca com espelho desatualizado.
 - Correcao recebida: instalar hook local de pre-commit no repo irmao de governanca para executar o check do espelho antes de cada commit.
 - Regra preventiva: em estrategia de espelho versionado para hub nao-git, considerar hook local como parte do toolkit padrao quando o objetivo for reduzir drift ao maximo.
+
+## 2026-04-20 - A raiz operacional atual desta maquina esta em `/media/jonathan/Dados1/Documentos`
+
+- Contexto: a retomada do rollout de Caveman ainda carregava a suposicao historica de `/media/jonathan/Dados/Documentos`.
+- Correcao recebida: para o runtime atual, a raiz correta dos workspaces ativos e `/media/jonathan/Dados1/Documentos`.
+- Regra preventiva: antes de qualquer rollout cross-workspace, validar a raiz operacional real em disco e tratar caminhos historicos como legados ate nova confirmacao explicita.
+- Como validar na proxima vez: confirmar que os owners alvo existem sob `/media/jonathan/Dados1/Documentos` antes de expandir inventario, edicoes ou auditorias.

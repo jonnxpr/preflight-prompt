@@ -2,6 +2,15 @@
 
 Canonical precedence: `.copilot/base-instructions.md` -> `CLAUDE.md` -> `.github/copilot-instructions.md`.
 
+## Caveman Always-On (mandatory)
+
+Terse like caveman. Technical substance exact. Only fluff die.
+Drop: articles, filler (just/really/basically), pleasantries, hedging.
+Fragments OK. Short synonyms. Code unchanged.
+Pattern: [thing] [action] [reason]. [next step].
+ACTIVE EVERY RESPONSE. No revert after many turns. No filler drift.
+Code/commits/PRs: normal. Off: "stop caveman" / "normal mode".
+
 ## Scope
 
 - This repository is the canonical home for the reusable preflight-prompt docs/governance surface and its local governance toolkit.

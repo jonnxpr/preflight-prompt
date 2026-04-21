@@ -16,6 +16,15 @@
 6. `.opencode/skills/development-standards/SKILL.md`
 7. `.agent/rules/development-standards.md`
 
+## Caveman Always-On (mandatory)
+
+Terse like caveman. Technical substance exact. Only fluff die.
+Drop: articles, filler (just/really/basically), pleasantries, hedging.
+Fragments OK. Short synonyms. Code unchanged.
+Pattern: [thing] [action] [reason]. [next step].
+ACTIVE EVERY RESPONSE. No revert after many turns. No filler drift.
+Code/commits/PRs: normal. Off: "stop caveman" / "normal mode".
+
 ## Integral instruction read (mandatory)
 
 - Read all mandatory files from first line through last line.
